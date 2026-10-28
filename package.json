@@ -1,0 +1,28 @@
+{
+  "name": "arcana-highlights",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alisha-develops/arcana-highlights.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/alisha-develops/arcana-highlights/issues"
+  },
+  "homepage": "https://github.com/alisha-develops/arcana-highlights#readme",
+  "devDependencies": {
+    "sass": "^1.107.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  }
+}
