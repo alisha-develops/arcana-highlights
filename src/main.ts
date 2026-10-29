@@ -8,7 +8,8 @@ spread.style.setProperty("--total", String(leaves.length));
 leaves.forEach((leaf, i) => leaf.style.setProperty("--i", String(i + 1)));
 
 document.getElementById("nextspread")!.addEventListener("click", () => {
-    if (current>=leaves.length) return;
-    leaves[current].classList.add("flipped");
+    const leaf = leaves[current];
+    if (!leaf) return;
+    leaf.classList.add("flipped");
     current++;
-})
+});
