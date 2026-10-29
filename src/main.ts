@@ -13,3 +13,10 @@ document.getElementById("nextspread")!.addEventListener("click", () => {
     leaf.classList.add("flipped");
     current++;
 });
+
+document.getElementById("prevspread")!.addEventListener("click", () => {
+    const leaf = leaves[current-1];
+    if (!leaf) return;
+    leaf.classList.remove("flipped");
+    current--;
+})

@@ -8,12 +8,37 @@ $test-color: #ADD8E6
 body
   background: $test-color
   font-family: sans-serif
+  margin: 0
+  min-height: 100vh
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: 20px
 
 .bookspread 
   position: relative
   width: $page-w*2
   height: $page-h
+  border-radius: 15px
   perspective: 2000px
+  align-items: center
+  // outline: 10px solid #003153
+
+.basepage, .face
+  box-sizing: border-box
+
+.basepage.left, .face.back
+  border-left: 10px solid #003153
+  border-right: 5px solid #003153
+  border-top: 10px solid #003153
+  border-bottom: 10px solid #003153
+
+.basepage.right, .face.front
+  border-right: 10px solid #003153
+  border-left: 5px solid #003153
+  border-top: 10px solid #003153
+  border-bottom: 10px solid #003153
 
 .leaf
   position: absolute
@@ -21,6 +46,7 @@ body
   left: $page-w
   width: $page-w
   height: $page-h
+  border-radius: 15px
   transform-origin: left center
   transform-style: preserve-3d
   transition: transform $flip-time ease, z-index 0s $flip-time*0.5
@@ -34,10 +60,11 @@ body
   top: 0
   left: 0
   width: $page-w
+  border-radius: 15px
   height: $page-h
   backface-visibility: hidden
   background: white
-  border: 1px solid black
+  // border: 1px solid black
   &.back
     transform: rotateY(180deg)
 
@@ -46,8 +73,9 @@ body
   top: 0
   width: $page-w
   height: $page-h
+  border-radius: 15px
   background: white
-  border: 1px solid black
+  // border: 1px solid black
   &.left
     left: 0
   &.right
