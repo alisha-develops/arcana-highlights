@@ -1,12 +1,16 @@
 @use 'sass:math'
 
-$page-w: 300px
+$page-w: 360px
 $page-h: 400px
 $flip-time: 1s
 $test-color: #ADD8E6
+$pg-color: #f3e9cc
+$spine-shadow-left: linear-gradient(to right, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18) 100%)
+$spine-shadow-right: linear-gradient(to left, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18) 100%)
 
 body
   background: $test-color
+  background-image: url("https://www.transparenttextures.com/patterns/crissxcross.png")
   font-family: sans-serif
   margin: 0
   min-height: 100vh
@@ -23,22 +27,36 @@ body
   border-radius: 15px
   perspective: 2000px
   align-items: center
-  // outline: 10px solid #003153
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.35)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2))
+  transform: scaleX(1.1) rotateX(15deg) rotateY(-10deg)
+  transform-style: preserve-3d
 
 .basepage, .face
   box-sizing: border-box
 
 .basepage.left, .face.back
+  background: $pg-color
   border-left: 10px solid #003153
   border-right: 5px solid #003153
   border-top: 10px solid #003153
   border-bottom: 10px solid #003153
+  border-radius: 0 100% 100% 0/0 14px 14px 0
 
 .basepage.right, .face.front
+  background: $pg-color
   border-right: 10px solid #003153
   border-left: 5px solid #003153
   border-top: 10px solid #003153
   border-bottom: 10px solid #003153
+  border-radius: 100% 0 0 100%/14px 0 0 14px
+
+.basepage.left
+  left: 0
+  background-image: linear-gradient(to right, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18) 100%)
+
+.basepage.right
+  left: $page-w
+  background-image: linear-gradient(to left, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18) 100%)
 
 .leaf
   position: absolute
@@ -64,10 +82,25 @@ body
   height: $page-h
   backface-visibility: hidden
   background: white
-  // border: 1px solid black
+  &::after
+    content: ''
+    position: absolute
+    inset: 0
+    pointer-events: none
+    transition: opacity $flip-time ease
+  &.front
+    background-image: $spine-shadow-right
+    &::after
+      background-image: $spine-shadow-right
+      opacity: 0
+
   &.back
     transform: rotateY(180deg)
-
+    background-image: $spine-shadow-left
+    &::after
+      background-image: $spine-shadow-left
+      opacity: 0
+  
 .basepage 
   position: absolute
   top: 0
