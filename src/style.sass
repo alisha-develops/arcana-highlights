@@ -29,12 +29,26 @@ body
     transform: rotateY(-180deg)
     z-index: var(--i)
 
-.face 
+.face
   position: absolute
   top: 0
   left: 0
   width: $page-w
   height: $page-h
   backface-visibility: hidden
+  background: white
+  border: 1px solid black
   &.back
     transform: rotateY(180deg)
+
+.basepage 
+  position: absolute
+  top: 0
+  width: $page-w
+  height: $page-h
+  background: white
+  border: 1px solid black
+  &.left
+    left: 0
+  &.right
+    left: $page-w
