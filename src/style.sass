@@ -28,7 +28,7 @@ body
   perspective: 2000px
   align-items: center
   filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.35)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2))
-  transform: scaleX(1.1) rotateX(15deg) rotateY(-10deg)
+  // transform: rotateX(15deg) rotateY(-10deg)
   transform-style: preserve-3d
 
 .basepage, .face
@@ -36,27 +36,27 @@ body
 
 .basepage.left, .face.back
   background: $pg-color
-  border-left: 10px solid #003153
-  border-right: 5px solid #003153
-  border-top: 10px solid #003153
-  border-bottom: 10px solid #003153
-  border-radius: 0 100% 100% 0/0 14px 14px 0
+  border: 10px solid #003153
+  border-style: double
+  border-right: none
+  // border-radius: 0 100% 100% 0/0 14px 14px 0
+  border-radius: 8% 100% 100% 8% / 4% 12% 12% 4%
 
 .basepage.right, .face.front
   background: $pg-color
-  border-right: 10px solid #003153
-  border-left: 5px solid #003153
-  border-top: 10px solid #003153
-  border-bottom: 10px solid #003153
-  border-radius: 100% 0 0 100%/14px 0 0 14px
+  border: 10px solid #003153
+  border-style: double
+  border-left: 2px solid #003153
+  // border-radius: 100% 0 0 100%/14px 0 0 14px
+  border-radius: 100% 8% 8% 100% / 12% 4% 4% 12% // <-- this is more curved
 
 .basepage.left
   left: 0
-  background-image: linear-gradient(to right, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18) 100%)
+  background-image: $spine-shadow-left
 
 .basepage.right
   left: $page-w
-  background-image: linear-gradient(to left, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18) 100%)
+  background-image: $spine-shadow-right
 
 .leaf
   position: absolute
