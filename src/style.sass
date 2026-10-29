@@ -1,5 +1,40 @@
-$test-color: #ff6b6b
+@use 'sass:math'
+
+$page-w: 300px
+$page-h: 400px
+$flip-time: 1s
+$test-color: #ADD8E6
 
 body
   background: $test-color
   font-family: sans-serif
+
+.bookspread 
+  position: relative
+  width: $page-w*2
+  height: $page-h
+  perspective: 2000px
+
+.leaf
+  position: absolute
+  top: 0
+  left: $page-w
+  width: $page-w
+  height: $page-h
+  transform-origin: left center
+  transform-style: preserve-3d
+  transition: transform $flip-time ease, z-index 0s $flip-time*0.5
+  z-index: calc(var(--total) - var(--i) + 1)
+  &.flipped
+    transform: rotateY(-180deg)
+    z-index: var(--i)
+
+.face 
+  position: absolute
+  top: 0
+  left: 0
+  width: $page-w
+  height: $page-h
+  backface-visibility: hidden
+  &.back
+    transform: rotateY(180deg)
