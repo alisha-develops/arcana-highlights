@@ -3,11 +3,12 @@
 $page-w: 360px
 $page-h: 400px
 $flip-time: 1s
-$test-color: #ADD8E6
-$pg-color: #f3e9cc
+$test-color: #36332a
+$pg-color: #e4cc84
+$pg-border-color: #685a2f
 $spine-shadow-left: linear-gradient(to right, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18) 100%)
 $spine-shadow-right: linear-gradient(to left, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18) 100%)
-
+$page-texture: url("https://www.transparenttextures.com/patterns/natural-paper.png")
 body
   background: $test-color
   background-image: url("https://www.transparenttextures.com/patterns/crissxcross.png")
@@ -32,11 +33,15 @@ body
   transform-style: preserve-3d
 
 .basepage, .face
-  box-sizing: border-box
+  background-color: $pg-color
+  background-image: $page-texture
+  // background-size: cover
+  // background-position: center
+  // background-repeat: no-repeat
 
 .basepage.left, .face.back
   background: $pg-color
-  border: 10px solid #003153
+  border: 10px solid $pg-border-color
   border-style: double
   border-right: none
   // border-radius: 0 100% 100% 0/0 14px 14px 0
@@ -44,19 +49,25 @@ body
 
 .basepage.right, .face.front
   background: $pg-color
-  border: 10px solid #003153
+  border: 10px solid $pg-border-color
   border-style: double
-  border-left: 2px solid #003153
+  border-left: 2px solid $pg-border-color
   // border-radius: 100% 0 0 100%/14px 0 0 14px
   border-radius: 100% 8% 8% 100% / 12% 4% 4% 12% // <-- this is more curved
 
 .basepage.left
   left: 0
-  background-image: $spine-shadow-left
+  background-image: $spine-shadow-right, $page-texture
+  // background-size: 100% 100%, cover
+  // background-position: center, center
+  // background-repeat: no-repeat
 
 .basepage.right
   left: $page-w
-  background-image: $spine-shadow-right
+  background-image: $spine-shadow-right, $page-texture
+  // background-size: 100% 100%, cover
+  // background-position: center, center
+  // background-repeat: no-repeat
 
 .leaf
   position: absolute
@@ -89,14 +100,14 @@ body
     pointer-events: none
     transition: opacity $flip-time ease
   &.front
-    background-image: $spine-shadow-right
+    background-image: $spine-shadow-right, $page-texture
     &::after
       background-image: $spine-shadow-right
       opacity: 0
 
   &.back
     transform: rotateY(180deg)
-    background-image: $spine-shadow-left
+    background-image: $spine-shadow-left, $page-texture
     &::after
       background-image: $spine-shadow-left
       opacity: 0
