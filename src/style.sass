@@ -1,4 +1,8 @@
 @use 'sass:math'
+@font-face
+  font-family:'datbox'
+  src: url('../fonts/datbox.regular.ttf') format('truetype')
+  font-display: block
 
 $page-w: 360px
 $page-h: 400px
@@ -41,6 +45,7 @@ body
   transform-style: preserve-3d
 
 .basepage, .face
+  box-sizing: border-box
   background-color: $pg-color
   background-image: $page-texture
   // background-size: cover
@@ -140,3 +145,22 @@ body
 @media (hover: hover) and (pointer: fine)
   .booknav
     display: none
+
+.cover .front
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  align-items: center
+  padding: 40px 20px
+  text-align: center
+
+.cover-title
+  font-size: 1.6rem
+  color: #4e4730
+  font-family: 'datbox'
+  margin: 0
+
+.cover-sub
+  margin: 0
+  color: #4e4730
+  font-family: 'datbox'

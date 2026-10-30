@@ -36,26 +36,21 @@ intro
     }, "<")
     .to (spread, {
         scale: 1.8, 
-        transformOrigin: "80% 25%",
-        duration: 1.5, 
+        transformOrigin: "75% 0%",
+        duration: 1.2, 
         ease: "power1.inOut"
     })
     .to (spread, {
-        scale: 1,
+        y: -300, 
         duration: 0.8, 
         ease: "power1.inOut"
     },"+=0.5")
     .to (spread, {
-        scale: 2.2, 
-        transformOrigin: "70% 65%",
+        scale: 1,
+        y: 0,
         duration: 1, 
-        ease: "power1.inOut"
-    })
-    .to (spread, {
-        scale: 1,
-        duration: 0.8, 
-        ease: "power1.inOut"
-    },"+=0.5")
+        ease: "power2.inOut"
+    },"+=0.4")
     .call(() => { 
         cover.classList.add("flipped"); current = 1; 
     }, [],"+=1")
