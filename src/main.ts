@@ -11,25 +11,55 @@ spread.style.setProperty("--total", String(leaves.length));
 leaves.forEach((leaf, i) => leaf.style.setProperty("--i", String(i + 1)));
 
 gsap.set(spread, { 
-    xPercent: -25 
+    xPercent: -25 ,
+    transformOrigin: "75% 50%"
 });
 
-const intro = gsap.timeline({ onComplete: () => {locked = false;} });
+document.body.style.overflow = "hidden";
+const intro = gsap.timeline({
+    onComplete: () => {
+    locked = false;
+    document.body.style.overflow = "";
+    }
+});
+
 intro
-  .from(spread, { 
+    .from(spread, { 
         y: "-100vh", 
         duration: 1.2, 
         ease: "bounce.out" 
     })
-  .from(spread, { 
+    .from(spread, { 
         rotation: -8,  
         duration: 0.9, 
         ease: "power2.out" 
     }, "<")
-  .call(() => { 
+    .to (spread, {
+        scale: 1.8, 
+        transformOrigin: "80% 25%",
+        duration: 1.5, 
+        ease: "power1.inOut"
+    })
+    .to (spread, {
+        scale: 1,
+        duration: 0.8, 
+        ease: "power1.inOut"
+    },"+=0.5")
+    .to (spread, {
+        scale: 2.2, 
+        transformOrigin: "70% 65%",
+        duration: 1, 
+        ease: "power1.inOut"
+    })
+    .to (spread, {
+        scale: 1,
+        duration: 0.8, 
+        ease: "power1.inOut"
+    },"+=0.5")
+    .call(() => { 
         cover.classList.add("flipped"); current = 1; 
-    }, [],"+=1.5")
-  .to(spread, { 
+    }, [],"+=1")
+    .to(spread, { 
         xPercent: 0, duration: 1,  
         ease: "power2.inOut" 
     }, "<");
