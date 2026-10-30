@@ -50,7 +50,7 @@ intro
         y: 0,
         duration: 1, 
         ease: "power2.inOut"
-    },"+=0.4")
+    },"+=1.4")
     .call(() => { 
         cover.classList.add("flipped"); current = 1; 
     }, [],"+=1")
@@ -59,18 +59,18 @@ intro
         ease: "power2.inOut" 
     }, "<");
 
-document.getElementById("nextspread")!.addEventListener("click", () => {
-    if (locked) return;
-    const leaf = leaves[current];
-    if (!leaf) return;
-    leaf.classList.add("flipped");
-    current++;
-});
+// document.getElementById("nextspread")!.addEventListener("click", () => {
+//     if (locked) return;
+//     const leaf = leaves[current];
+//     if (!leaf) return;
+//     leaf.classList.add("flipped");
+//     current++;
+// });
 
-document.getElementById("prevspread")!.addEventListener("click", () => {
-    if (locked || current <= 1) return;
-    const leaf = leaves[current - 1];
-    if (!leaf) return;
-    leaf.classList.remove("flipped");
-    current--;
-});
+// document.getElementById("prevspread")!.addEventListener("click", () => {
+//     if (locked) return;
+//     const leaf = leaves[current - 1];
+//     if (!leaf) return;
+//     leaf.classList.remove("flipped");
+//     current--;
+// });
