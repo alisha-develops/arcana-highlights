@@ -29,7 +29,7 @@ body
   perspective: 2000px
   align-items: center
   filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.35)) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2))
-  // transform: rotateX(15deg) rotateY(-10deg)
+  // transform: rotateX(15deg) rotateY(-10deg) 
   transform-style: preserve-3d
 
 .basepage, .face
@@ -45,7 +45,9 @@ body
   border-style: double
   border-right: none
   // border-radius: 0 100% 100% 0/0 14px 14px 0
-  border-radius: 8% 100% 100% 8% / 4% 12% 12% 4%
+  // border-radius: 8% 100% 100% 8% / 4% 12% 12% 4%
+  border-radius: 60% 40% 40% 60%/3% 5% 5% 3%
+
 
 .basepage.right, .face.front
   background: $pg-color
@@ -53,7 +55,8 @@ body
   border-style: double
   border-left: 2px solid $pg-border-color
   // border-radius: 100% 0 0 100%/14px 0 0 14px
-  border-radius: 100% 8% 8% 100% / 12% 4% 4% 12% // <-- this is more curved
+  // border-radius: 100% 8% 8% 100% / 12% 4% 4% 12% // <-- this is more curved
+  border-radius: 40% 60% 60% 40%/5% 3% 3% 5%
 
 .basepage.left
   left: 0
@@ -78,9 +81,10 @@ body
   border-radius: 15px
   transform-origin: left center
   transform-style: preserve-3d
-  transition: transform $flip-time ease, z-index 0s $flip-time*0.5
+  transition: transform $flip-time ease, z-index 0s
   z-index: calc(var(--total) - var(--i) + 1)
   &.flipped
+    transition: transform $flip-time ease, z-index 0s $flip-time*0.5 
     transform: rotateY(-180deg)
     z-index: var(--i)
 
