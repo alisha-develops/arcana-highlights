@@ -17,9 +17,10 @@ gsap.set(spread, {
 
 document.body.style.overflow = "hidden";
 const intro = gsap.timeline({
+    paused: true,
     onComplete: () => {
-    locked = false;
-    document.body.style.overflow = "";
+        locked = false;
+        document.body.style.overflow = "";
     }
 });
 
@@ -39,7 +40,7 @@ intro
         transformOrigin: "75% 0%",
         duration: 1.2, 
         ease: "power1.inOut"
-    })
+    }, "+=1")
     .to (spread, {
         y: -300, 
         duration: 0.8, 
@@ -59,18 +60,25 @@ intro
         ease: "power2.inOut" 
     }, "<");
 
-// document.getElementById("nextspread")!.addEventListener("click", () => {
-//     if (locked) return;
-//     const leaf = leaves[current];
-//     if (!leaf) return;
-//     leaf.classList.add("flipped");
-//     current++;
-// });
+const bgm = new Audio("../audio/super-trouper-cut.mp3");
+bgm.preload = "auto";
+bgm.loop = true;
+bgm.volume = 0.4;
 
-// document.getElementById("prevspread")!.addEventListener("click", () => {
-//     if (locked) return;
-//     const leaf = leaves[current - 1];
-//     if (!leaf) return;
-//     leaf.classList.remove("flipped");
-//     current--;
-// });
+const introScreen = document.querySelector<HTMLElement>(".intro")!;
+const enter = document.getElementById("enter")!;
+const fontReady = document.fonts.load('1em "datbox"');
+
+enter.addEventListener("click", async () => {
+    bgm.play().catch((err) => console.error(err));
+    await fontReady;
+    gsap.to(introScreen, {
+        opacity: 0,
+        duration: 0.8,
+        onComplete: () => {
+            introScreen.remove();
+            gsap.set(spread, { visibility: "visible" });
+            intro.restart();
+        }
+    });
+}, { once: true });
