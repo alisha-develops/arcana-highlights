@@ -60,23 +60,63 @@ intro
         ease: "power2.inOut" 
     }, "<");
 
+const introScreen = document.querySelector<HTMLElement>(".intro")!;
+const enter = document.getElementById("enter") as HTMLButtonElement;
+const paragraphs = gsap.utils.toArray<HTMLParagraphElement>(".intro p");
+const typingIntro = gsap.timeline({
+    onComplete: () => {
+        enter.disabled = false;
+    }
+});
+
+gsap.set([...paragraphs, enter], { autoAlpha: 0 });
+paragraphs.forEach((p, i) => {
+    const text = p.textContent!.trim();
+    const chars = { count: 0 };
+
+    p.textContent = "";
+
+    typingIntro
+        .set(p, { autoAlpha: 1 })
+        .to(chars, {
+            count: text.length,
+            duration: text.length * 0.03,
+            ease: "none",
+            onUpdate: () => {
+                p.textContent = text.slice(0, Math.round(chars.count));
+            }
+        })
+        .to({}, { duration: 1.5 });
+    if (i !== paragraphs.length - 1) {
+        typingIntro.to(p, {
+            autoAlpha: 0,
+            duration: 0.6
+        });
+    }
+});
+
+typingIntro.to(enter, {
+    autoAlpha: 1,
+    duration: 0.8
+});
+
+const fontReady = document.fonts.ready;
 const bgm = new Audio("../audio/super-trouper-cut.mp3");
 bgm.preload = "auto";
 bgm.loop = true;
 bgm.volume = 0.4;
 
-const introScreen = document.querySelector<HTMLElement>(".intro")!;
-const enter = document.getElementById("enter")!;
-const fontReady = document.fonts.load('1em "datbox"');
-
 enter.addEventListener("click", async () => {
     bgm.play().catch((err) => console.error(err));
+
     await fontReady;
+
     gsap.to(introScreen, {
         opacity: 0,
         duration: 0.8,
         onComplete: () => {
             introScreen.remove();
+
             gsap.set(spread, { visibility: "visible" });
             intro.restart();
         }

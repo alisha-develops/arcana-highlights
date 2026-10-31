@@ -37,23 +37,39 @@ body
   flex-direction: column
   align-items: center
   justify-content: center
-  gap: 24px
   padding: 40px 12%
   background: #2b1d0e
   color: #e6d3a3
   font-family: 'Early Quake', serif
   text-align: center
+  ::selection
+    background: #e6d3a3
+    color: #2b1d0e
   p
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    width: 76%
     max-width: 750px
     font-size: 1.4rem
     line-height: 1.7
     margin: 0
+    opacity: 0
+    visibility: hidden
+
   button
+    position: absolute
+    top: calc(50% + 100px)
     border: none
     background: none
     color: inherit
     font-family: inherit
     cursor: pointer
+    opacity: 0
+    visibility: hidden
+    &:disabled
+      cursor: default
     small
       font-size: 1rem
       opacity: 0.6
