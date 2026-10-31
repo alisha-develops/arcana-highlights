@@ -101,7 +101,8 @@ typingIntro.to(enter, {
 });
 
 const fontReady = document.fonts.ready;
-const bgm = new Audio("../audio/super-trouper-cut.mp3");
+import bgmFile from "../audio/super-trouper-cut.mp3";
+const bgm = new Audio(bgmFile);
 bgm.preload = "auto";
 bgm.loop = true;
 bgm.volume = 0.4;
