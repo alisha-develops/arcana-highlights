@@ -124,6 +124,21 @@ enter.addEventListener("click", async () => {
     });
 }, { once: true });
 
+const stage = document.querySelector<HTMLElement>(".bookstage")!;
+const PAGE_WIDTH = 360;
+const PAGE_HEIGHT = 400;
+
+function resizeBook() {
+    const availableWidth = document.documentElement.clientWidth*0.92;
+    const availableHeight = document.documentElement.clientHeight*0.85;
+    const scaleX = availableWidth / (PAGE_WIDTH*2);
+    const scaleY = availableHeight/ PAGE_HEIGHT;
+    const scale = Math.min(scaleX, scaleY, 1);
+    stage.style.setProperty("--book-scale", String(scale));
+}
+resizeBook();
+window.addEventListener("resize", resizeBook);
+
 if (location.hash === "#dev") {
     typingIntro.kill();
     introScreen.remove();
