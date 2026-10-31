@@ -122,3 +122,10 @@ enter.addEventListener("click", async () => {
         }
     });
 }, { once: true });
+
+if (location.hash === "#dev") {
+    typingIntro.kill();
+    introScreen.remove();
+    gsap.set(spread, { visibility: "visible" });
+    intro.progress(1, false);
+}

@@ -104,9 +104,8 @@ body
   border: 10px solid $pg-border-color
   border-style: double
   border-right: none
-  // border-radius: 0 100% 100% 0/0 14px 14px 0
-  // border-radius: 8% 100% 100% 8% / 4% 12% 12% 4%
   border-radius: 60% 40% 40% 60%/3% 5% 5% 3%
+  // border-radius: 12px 40% 40% 12px/12px 5% 5% 12px
 
 
 .basepage.right, .face.front
@@ -114,9 +113,8 @@ body
   border: 10px solid $pg-border-color
   border-style: double
   border-left: 2px solid $pg-border-color
-  // border-radius: 100% 0 0 100%/14px 0 0 14px
-  // border-radius: 100% 8% 8% 100% / 12% 4% 4% 12% // <-- this is more curved
   border-radius: 40% 60% 60% 40%/5% 3% 3% 5%
+  // border-radius: 40% 12px 12px 40%/5% 12px 12px 5% 
 
 .basepage.left
   left: 0
@@ -133,6 +131,7 @@ body
   // background-repeat: no-repeat
 
 .leaf
+  will-change: transform
   position: absolute
   top: 0
   left: $page-w
@@ -219,3 +218,117 @@ body
   object-fit: cover
   border: 6px solid #3a2c1d
   filter: grayscale(1) sepia(1) contrast(1.4) brightness(0.9)
+
+.scrap
+  box-sizing: border-box
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  align-items: center
+  justify-items: center
+  gap: 16px
+  width: 100%
+  height: 100%
+  padding: 20px
+  figure
+    position: relative
+    margin: 0
+    width: 100%
+    img
+      display: block
+      width: 100%
+      height: auto
+      border: 6px solid #2b1d0e
+    &::before
+      content: ""
+      position: absolute
+      top: -9px
+      left: 50%
+      width: 44px
+      height: 16px
+      translate: -50% 0
+      rotate: -4deg
+      background: rgba(230, 211, 163, 0.75)
+      border: 3px solid rgba(43, 29, 14, 0.25)
+  .note
+    margin: 0
+    padding: 4px 8px
+    font-family: 'datbox'
+    font-size: 1.1rem
+    line-height: 1.15
+    color: #2b1d0e
+    text-align: center
+  > :nth-child(1)
+    transform: rotate(-4deg)
+  > :nth-child(2)
+    transform: rotate(-2deg)
+  > :nth-child(3)
+    transform: rotate(2deg)
+  > :nth-child(4)
+    transform: rotate(-3deg)
+  > :nth-child(5)
+    transform: rotate(1.5deg)
+
+.ticket
+  display: flex
+  width: 88%
+  margin: 28px auto 0
+  transform: rotate(-3deg)
+  background: #f3e6c0
+  background: $page-texture
+  border: 3px solid #2b1d0e
+  font-family: 'Courier New', monospace
+  color: #2b1d0e
+  small
+    display: block
+    font-size: 0.6rem
+    text-transform: uppercase
+    opacity: 0.7
+
+.ticket-main
+  flex: 1
+  padding: 10px 12px
+
+.route
+  display: flex
+  align-items: center
+  justify-content: space-between
+  margin: 6px 0
+
+.code
+  display: block
+  font-size: 1.5rem
+
+.details
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: 6px
+
+.ticket-stub
+  width: 22%
+  padding: 10px 8px
+  border-left: 2px dashed #2b1d0e
+
+.barcode
+  height: 100%
+  min-height: 70px
+  background: repeating-linear-gradient(90deg, #2b1d0e 0 2px, transparent 2px 4px, #2b1d0e 4px 5px, transparent 5px 8px)
+
+@media (max-width: 768px)
+  .intro
+    padding: 30px 8%
+    p
+      width: 85%
+      font-size: 1.1rem
+      line-height: 1.6
+    button
+      top: calc(50% + 120px)
+
+@media (max-width: 480px)
+  .intro
+    padding: 20px 6%
+    p
+      width: 88%
+      font-size: 0.95rem
+      line-height: 1.5
+    button
+      top: calc(50% + 130px)
