@@ -221,52 +221,116 @@ body
 
 .scrap
   box-sizing: border-box
+  position: relative
   display: grid
-  grid-template-columns: repeat(2, 1fr)
-  align-items: center
-  justify-items: center
-  gap: 16px
+  grid-template-columns: repeat(12, minmax(0, 1fr))
+  grid-template-rows: repeat(12, minmax(0, 1fr))
+  gap: 2px
   width: 100%
   height: 100%
-  padding: 20px
-  figure
-    position: relative
-    margin: 0
+  padding: 14px 16px 14px 10px
+  color: #2b1d0e
+
+.scrap-title
+  grid-column: 1 / 11
+  grid-row: 1 / 3
+  z-index: 3
+  align-self: center
+  margin: 0
+  font-family: "datbox"
+  font-size: 1.35rem
+  line-height: 1.1
+  text-align: center
+  transform: rotate(-3deg)
+  text-shadow: 1px 1px 0 #f3e6c0, -1px -1px 0 #f3e6c0
+
+.scrap-photo
+  position: relative
+  min-width: 0
+  min-height: 0
+  margin: 0
+  padding: 5px
+  background: #f3e6c0
+  box-shadow: 2px 3px 5px rgba(43, 29, 14, 0.2)
+  img
+    display: block
+    box-sizing: border-box
     width: 100%
-    img
-      display: block
-      width: 100%
-      height: auto
-      border: 6px solid #2b1d0e
-    &::before
-      content: ""
-      position: absolute
-      top: -9px
-      left: 50%
-      width: 44px
-      height: 16px
-      translate: -50% 0
-      rotate: -4deg
-      background: rgba(230, 211, 163, 0.75)
-      border: 3px solid rgba(43, 29, 14, 0.25)
-  .note
-    margin: 0
-    padding: 4px 8px
-    font-family: 'datbox'
-    font-size: 1.1rem
-    line-height: 1.15
-    color: #2b1d0e
-    text-align: center
-  > :nth-child(1)
-    transform: rotate(-4deg)
-  > :nth-child(2)
-    transform: rotate(-2deg)
-  > :nth-child(3)
-    transform: rotate(2deg)
-  > :nth-child(4)
-    transform: rotate(-3deg)
-  > :nth-child(5)
-    transform: rotate(1.5deg)
+    height: 100%
+    object-fit: cover
+    border: 3px solid #2b1d0e
+  &::before
+    content: ""
+    position: absolute
+    z-index: 2
+    top: -8px
+    left: 50%
+    width: 40px
+    height: 13px
+    translate: -50% 0
+    rotate: -4deg
+    background: rgba(230, 211, 163, 0.8)
+    border: 2px solid rgba(43, 29, 14, 0.2)
+
+.departure-photo
+  grid-column: 1 / 8
+  grid-row: 3 / 8
+  transform: rotate(-3deg)
+
+.flight-photo
+  grid-column: 7 / 13
+  grid-row: 2 / 7
+  transform: rotate(3deg)
+
+.food-photo
+  grid-column: 5 / 12
+  grid-row: 7 / 12
+  transform: rotate(2deg)
+
+.photo-caption
+  padding: 5px 2px 2px
+  font-family: "datbox"
+  font-size: 0.85rem
+  line-height: 1.1
+  text-align: center
+
+.departure-stamp
+  position: absolute
+  z-index: 4
+  left: 7%
+  bottom: 9%
+  width: 76px
+  height: 76px
+  display: flex
+  align-items: center
+  justify-content: center
+  box-sizing: border-box
+  border: 3px dashed #a64e36
+  border-radius: 50%
+  color: #a64e36
+  font-family: "datbox"
+  font-size: 0.8rem
+  line-height: 1.25
+  text-align: center
+  rotate: -14deg
+  opacity: 0.85
+
+.departure-date
+  position: absolute
+  z-index: 4
+  right: 7%
+  top: 3%
+  font-family: "Courier New", monospace
+  font-size: 0.55rem
+  rotate: 4deg
+
+.plane-doodle
+  position: absolute
+  z-index: 4
+  left: 48%
+  top: 46%
+  font-size: 1.2rem
+  rotate: -15deg
 
 .ticket
   display: flex
