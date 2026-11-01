@@ -316,6 +316,7 @@ body
   color: #a64e36
   font-family: "datbox"
   font-size: 0.8rem
+  font-weight:700
   line-height: 1.25
   text-align: center
   rotate: -14deg
@@ -433,6 +434,28 @@ body
     #2b1d0e 4px 5px,
     transparent 5px 8px
   )
+
+.page-indicators
+  position: absolute
+  top: calc(100% + 12px)
+  left: 0
+  width: 100%
+  display: flex
+  justify-content: space-between
+  padding: 0 22px
+  box-sizing: border-box
+  pointer-events: none
+  z-index: 100
+
+.page-indicator
+  font-family: 'datbox'
+  font-size: 0.8rem
+  color: #e4cc84
+  opacity: 0
+  transition: opacity 0.3s ease
+
+  &.visible
+    opacity: 1
 
 @media (max-width: 768px)
   .intro

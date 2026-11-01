@@ -21,6 +21,7 @@ const intro = gsap.timeline({
     onComplete: () => {
         locked = false;
         document.body.style.overflow = "";
+        updateIndicators();
     }
 });
 
@@ -145,3 +146,57 @@ if (location.hash === "#dev") {
     gsap.set(spread, { visibility: "visible" });
     intro.progress(1, false);
 }
+
+const previousIndicator = document.getElementById("previous-indicator")!;
+const nextIndicator = document.getElementById("next-indicator")!;
+
+let isAnimating = false;
+
+function updateIndicators() {
+    previousIndicator.classList.toggle("visible", current > 1);
+    nextIndicator.classList.toggle("visible", current > 1 && current < leaves.length);
+}
+
+function nextPage() {
+    if (locked) return;
+    if (isAnimating) return;
+    if (current >= leaves.length) return;
+
+    isAnimating = true;
+
+    leaves[current]!.classList.add("flipped");
+    current++;
+
+    gsap.delayedCall(1, () => {
+        isAnimating = false;
+        updateIndicators();
+    });
+}
+
+function previousPage() {
+    if (locked) return;
+    if (isAnimating) return;
+    if (current <= 1) return;
+
+    isAnimating = true;
+
+    current--;
+    leaves[current]!.classList.remove("flipped");
+
+    gsap.delayedCall(1, () => {
+        isAnimating = false;
+        updateIndicators();
+    });
+}
+document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowRight") {
+        nextPage();
+    }
+
+    if (event.key === "ArrowLeft") {
+        previousPage();
+    }
+});
+
+document.getElementById("nextspread")!.addEventListener("click", nextPage);
+document.getElementById("prevspread")!.addEventListener("click", previousPage);
