@@ -22,6 +22,7 @@ const intro = gsap.timeline({
         locked = false;
         document.body.style.overflow = "";
         updateIndicators();
+        playSpreadOne()
     }
 });
 
@@ -240,6 +241,46 @@ function syncVoice() {
         voice.pause();
         voice.currentTime = 0;
     }
+}
+
+const HALF = PAGE_WIDTH/2
+
+function playSpreadOne() {
+    if (location.hash === "#dev") {
+        locked = false;
+        updateIndicators();
+        return;
+    }
+
+    locked = true;
+    const Z = 1.5;
+    gsap.set(spread, { 
+        transformOrigin: "50% 50%" 
+    });
+
+    gsap.timeline({
+        onComplete: () => { 
+            locked = false; 
+            updateIndicators(); 
+        }
+    })
+    .to(spread, { 
+        scale: Z, 
+        x: HALF * Z,
+        duration: 1.1, 
+        ease: "power2.inOut" 
+    })
+    .to(spread, { 
+        x: -HALF * Z, 
+        duration: 1.2, 
+        ease: "power2.inOut" 
+    }, "+=1.2") 
+    .to(spread, { 
+        scale: 1, 
+        x: 0, 
+        duration: 1, 
+        ease: "power2.inOut" 
+    }, "+=1.2")
 }
 
 if (location.hash === "#dev") {
