@@ -61,6 +61,18 @@ intro
         ease: "power2.inOut" 
     }, "<");
 
+import introFile from "../audio/intro.mp3";
+
+const introSfx = new Audio(introFile);
+introSfx.preload = "auto";
+introSfx.volume = 1;
+
+intro.call(() => {
+    if (location.hash === "#dev") return;
+    introSfx.currentTime = 0;
+    introSfx.play().catch(console.error);
+}, [], 0);
+
 const introScreen = document.querySelector<HTMLElement>(".intro")!;
 const enter = document.getElementById("enter") as HTMLButtonElement;
 const paragraphs = gsap.utils.toArray<HTMLParagraphElement>(".intro p");
@@ -111,7 +123,7 @@ bgm.volume = 0.4;
 enter.addEventListener("click", async () => {
     bgm.play().catch((err) => console.error(err));
 
-    await fontReady;
+    await document.fonts.ready;
 
     gsap.to(introScreen, {
         opacity: 0,
@@ -140,13 +152,6 @@ function resizeBook() {
 resizeBook();
 window.addEventListener("resize", resizeBook);
 
-if (location.hash === "#dev") {
-    typingIntro.kill();
-    introScreen.remove();
-    gsap.set(spread, { visibility: "visible" });
-    intro.progress(1, false);
-}
-
 const previousIndicator = document.getElementById("previous-indicator")!;
 const nextIndicator = document.getElementById("next-indicator")!;
 
@@ -155,6 +160,8 @@ let isAnimating = false;
 function updateIndicators() {
     previousIndicator.classList.toggle("visible", current > 1);
     nextIndicator.classList.toggle("visible", current > 1 && current < leaves.length);
+    syncVideos();
+    syncVoice()
 }
 
 function nextPage() {
@@ -200,3 +207,48 @@ document.addEventListener("keydown", function(event) {
 
 document.getElementById("nextspread")!.addEventListener("click", nextPage);
 document.getElementById("prevspread")!.addEventListener("click", previousPage);
+
+function syncVideos() {
+    document.querySelectorAll<HTMLVideoElement>("video").forEach((v) => {
+        if (v.dataset.spread === String(current)) v.play().catch(() => {});
+        else v.pause();
+    });
+}
+
+import voiceFile from "../audio/layover-doha.mp3";
+
+const voice = new Audio(voiceFile);
+voice.preload = "auto";
+
+const BGM_VOL = 0.4;
+const DUCK_VOL = 0.06; 
+
+function duck(on: boolean) {
+    gsap.to(bgm, { volume: on ? DUCK_VOL : BGM_VOL, duration: 0.3, overwrite: "auto" });
+}
+
+voice.addEventListener("play", () => duck(true));
+voice.addEventListener("pause", () => duck(false));
+voice.addEventListener("ended", () => duck(false));
+introSfx.addEventListener("play", () => duck(true));
+introSfx.addEventListener("ended", () => duck(false));
+
+function syncVoice() {
+    if (current === 2) {
+        voice.play().catch(console.error);
+    } else {
+        voice.pause();
+        voice.currentTime = 0;
+    }
+}
+
+if (location.hash === "#dev") {
+    typingIntro.kill();
+    introScreen.remove();
+    gsap.set(spread, { visibility: "visible" });
+    intro.progress(1, false);
+
+    leaves[1]!.classList.add("flipped");
+    current = 2;
+    updateIndicators();
+}

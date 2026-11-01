@@ -457,6 +457,166 @@ body
   &.visible
     opacity: 1
 
+.reel-page
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  position: relative
+  gap: 10px
+  padding-top: 34px
+  box-sizing: border-box
+  width: 100%
+  height: 100%
+  padding-left: 96px  
+
+.reel
+  position: relative
+  margin: 0 14px 0 0
+  padding: 8px 8px 4px
+  translate: 12px 0
+  background: #f3e6c0
+  box-shadow: 2px 3px 5px rgba(43, 29, 14, 0.2)
+  rotate: -2deg
+  &.second
+    margin: 0 0 0 14px
+    rotate: 3deg  
+  &::before
+    content: ""
+    position: absolute
+    top: -10px
+    left: 50%
+    width: 44px
+    height: 14px
+    translate: -50% 0
+    rotate: 3deg
+    background: rgba(230, 211, 163, 0.8)
+    border: 2px solid rgba(43, 29, 14, 0.2)
+
+.reel.second
+  translate: 0 -12px
+
+.reel-screen
+  position: relative
+  width: 180px
+  aspect-ratio: 16 / 9
+  height: auto
+  border: 3px solid #2b1d0e
+  overflow: hidden
+  &::after
+    content: ""
+    position: absolute
+    inset: 0
+    pointer-events: none
+    background: repeating-linear-gradient(0deg, rgba(43, 29, 14, 0.18) 0 1px, transparent 1px 3px)
+
+.reel-title
+  position: absolute
+  top: 6px
+  left: 0
+  right: 0
+  margin: 0
+  z-index: 3
+  font-family: "datbox"
+  font-size: 1.15rem
+  text-align: center
+  white-space: nowrap
+  rotate: -2deg
+  text-shadow: 1px 1px 0 #f3e6c0, -1px -1px 0 #f3e6c0
+
+.route
+  display: flex
+  align-items: center
+  width: 230px
+  height: 34px
+  font-family: "datbox"
+  font-size: 0.8rem
+  .leg
+    position: relative
+    flex: 1
+    height: 17px
+    margin: 0 4px
+    &::after
+      content: "✈"
+      position: absolute
+      left: 50%
+      translate: -50% 0
+      font-style: normal
+      font-size: 1rem
+      background: #e4cc84
+    &.one
+      align-self: flex-start
+      border-top: 2px dashed #2b1d0e
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0
+      &::after
+        top: -0.65em
+    &.two
+      align-self: flex-end
+      border-bottom: 2px dashed #2b1d0e
+      border-radius: 0 0 50% 50% / 0 0 100% 100%
+      &::after
+        bottom: -0.65em
+
+.transit-stamp
+  @extend .departure-stamp
+  left: auto
+  bottom: auto
+  width: 78px
+  height: 78px
+  top: 25px
+  right: 205px
+
+.sticky-note
+  position: absolute
+  left: 13px
+  bottom: 14px
+  z-index: 3
+  width: 96px
+  margin: 0
+  padding: 10px 8px 8px
+  box-sizing: border-box
+  background: #2b1d0e 
+  box-shadow: 2px 3px 0 rgba(43, 29, 14, 0.25)
+  font-family: "datbox"
+  font-size: 0.7rem
+  font-weight: 700
+  line-height: 1.2
+  color: rgba(255, 245, 220, 0.8)
+  rotate: -5deg
+  &::before
+    content: ""
+    position: absolute
+    top: -7px
+    left: 50%
+    width: 34px
+    height: 12px
+    translate: -50% 0
+    background: rgba(230, 211, 163, 0.8)
+    border: 2px solid rgba(43, 29, 14, 0.2)
+
+.page-video
+  display: block
+  width: 100%
+  height: 100%
+  object-fit: cover
+  image-rendering: pixelated
+  filter: grayscale(1) sepia(1) contrast(1.4) brightness(0.9)
+
+.rec
+  top: 8px
+  left: 8px
+  font-size: 0.7rem
+  font-weight: 700
+  text-shadow: 1px 1px 0 #2b1d0e, -1px -1px 0 #2b1d0e, 1px -1px 0 #2b1d0e, -1px 1px 0 #2b1d0e
+  animation: blink 1.2s steps(2) infinite
+
+.stamp-time
+  bottom: 8px
+  right: 8px
+  font-size: 0.7rem
+  font-weight: 700
+  text-shadow: 1px 1px 0 #2b1d0e, -1px -1px 0 #2b1d0e, 1px -1px 0 #2b1d0e, -1px 1px 0 #2b1d0e
+
 @media (max-width: 768px)
   .intro
     padding: 30px 8%
