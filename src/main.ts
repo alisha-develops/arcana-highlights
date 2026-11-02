@@ -7,6 +7,15 @@ const cover = leaves[0]!;
 let current = 0;
 let locked = true;
 
+const readingTimes: Record<number, number> = {
+    1: 3000,
+    2: 21000,
+    3: 8000,
+};
+
+let autoTurn!: gsap.core.Tween;
+let hasAutoTurn = false;
+
 spread.style.setProperty("--total", String(leaves.length));
 leaves.forEach((leaf, i) => leaf.style.setProperty("--i", String(i + 1)));
 
@@ -22,7 +31,7 @@ const intro = gsap.timeline({
         locked = false;
         document.body.style.overflow = "";
         updatePage();
-        playSpreadOne()
+        playSpreadOne();
     }
 });
 
@@ -61,6 +70,30 @@ intro
         xPercent: 0, duration: 1,  
         ease: "power2.inOut" 
     }, "<");
+
+
+function scheduleNextPage() {
+    if (hasAutoTurn) {
+        autoTurn.kill();
+        hasAutoTurn = false;
+    }
+
+    if (locked) return;
+    if (location.hash === "#dev") return;
+    if (current >= leaves.length) return;
+
+    let readingTime = readingTimes[current];
+    if (readingTime === undefined) {
+        readingTime = 10000;
+    }
+
+    const delay = readingTime / 1000;
+
+    autoTurn = gsap.delayedCall(delay, () => {
+        nextPage();
+    });
+    hasAutoTurn = true;
+}
 
 import introFile from "../audio/intro.mp3";
 
@@ -114,7 +147,6 @@ typingIntro.to(enter, {
     duration: 0.8
 });
 
-const fontReady = document.fonts.ready;
 import bgmFile from "../audio/super-trouper-cut.mp3";
 const bgm = new Audio(bgmFile);
 bgm.preload = "auto";
@@ -165,6 +197,11 @@ function nextPage() {
     if (isAnimating) return;
     if (current >= leaves.length) return;
 
+    if (hasAutoTurn) {
+        autoTurn.kill();
+        hasAutoTurn = false;
+    }
+
     isAnimating = true;
 
     leaves[current]!.classList.add("flipped");
@@ -173,6 +210,7 @@ function nextPage() {
     gsap.delayedCall(1, () => {
         isAnimating = false;
         updatePage();
+        scheduleNextPage();
     });
 }
 
@@ -180,6 +218,11 @@ function previousPage() {
     if (locked) return;
     if (isAnimating) return;
     if (current <= 1) return;
+
+    if (hasAutoTurn) {
+        autoTurn.kill();
+        hasAutoTurn = false;
+    }
 
     isAnimating = true;
 
@@ -189,6 +232,7 @@ function previousPage() {
     gsap.delayedCall(1, () => {
         isAnimating = false;
         updatePage();
+        scheduleNextPage();
     });
 }
 document.addEventListener("keydown", function(event) {
@@ -201,8 +245,8 @@ document.addEventListener("keydown", function(event) {
     }
 });
 
-document.getElementById("nextspread")!.addEventListener("click", nextPage);
-document.getElementById("prevspread")!.addEventListener("click", previousPage);
+// document.getElementById("nextspread")!.addEventListener("click", nextPage);
+// document.getElementById("prevspread")!.addEventListener("click", previousPage);
 
 function syncVideos() {
     document.querySelectorAll<HTMLVideoElement>("video").forEach((v) => {
@@ -257,6 +301,7 @@ function playSpreadOne() {
         onComplete: () => { 
             locked = false; 
             updatePage(); 
+            scheduleNextPage();
         }
     })
     .to(spread, { 
