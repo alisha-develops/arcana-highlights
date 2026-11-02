@@ -603,10 +603,14 @@ body
   filter: grayscale(1) sepia(1) contrast(1.4) brightness(0.9)
 
 .rec
-  top: 8px
-  left: 8px
+  position: absolute
+  top: 6px
+  left: 6px
+  z-index: 10
+  color: #2b1d0e
   font-size: 0.7rem
   font-weight: 700
+  scale: 0.55
   text-shadow: 1px 1px 0 #2b1d0e, -1px -1px 0 #2b1d0e, 1px -1px 0 #2b1d0e, -1px 1px 0 #2b1d0e
   animation: blink 1.2s steps(2) infinite
 
@@ -616,6 +620,115 @@ body
   font-size: 0.7rem
   font-weight: 700
   text-shadow: 1px 1px 0 #2b1d0e, -1px -1px 0 #2b1d0e, 1px -1px 0 #2b1d0e, -1px 1px 0 #2b1d0e
+
+.pass
+  position: absolute
+  top: 18px
+  right: 3px
+  z-index: 4
+  width: 148px
+  box-sizing: border-box
+  background: #f3e6c0
+  border: 2px solid #2b1d0e
+  box-shadow: 4px 5px 0 rgba(43, 29, 14, 0.25)
+  font-family: 'Courier New', monospace
+  color: #2b1d0e
+  rotate: -3deg
+  overflow: hidden
+  scale: 0.75
+
+.pass-head
+  display: flex
+  justify-content: space-between
+  align-items: center
+  padding: 5px 7px
+  background: #2b1d0e
+  color: #f3e6c0
+  font-size: 0.48rem
+  letter-spacing: 0.08em
+
+.pass-route
+  display: flex
+  align-items: center
+  justify-content: space-between
+  padding: 10px 7px 7px
+  text-align: center
+  b
+    display: block
+    font-size: 1.45rem
+    line-height: 1
+  small
+    display: block
+    font-size: 0.48rem
+    text-transform: uppercase
+
+.pass-plane
+  font-size: 1rem
+
+.pass-details
+  display: flex
+  justify-content: space-between
+  padding: 5px 7px 8px
+  border-top: 1px dashed rgba(43, 29, 14, 0.5)
+  div
+    display: grid
+    gap: 2px
+  b
+    font-size: 0.75rem
+
+.pass-stub
+  padding: 6px 7px 8px
+  border-top: 2px dashed #2b1d0e
+  background: rgba(43, 29, 14, 0.04)
+
+.pass-barcode
+  height: 22px
+  background: repeating-linear-gradient(
+    90deg,
+    #2b1d0e 0 2px,
+    transparent 2px 4px,
+    #2b1d0e 4px 5px,
+    transparent 5px 8px
+  )
+
+.clip
+  @extend .reel
+  margin: 0
+  align-self: start
+  .reel-screen
+    width: 82px
+    aspect-ratio: 9 / 16 
+    height: auto
+  &.metro
+    grid-area: 1 / 1 / 7 / 5
+    rotate: -3deg
+  &.changi
+    grid-area: 1 / 5 / 7 / 9
+    rotate: 3deg
+    translate: 0 14px 
+
+.sg-photo-1
+  grid-area: 7 / 1 / 11 / 6
+  rotate: -4deg
+  translate: 0 40px
+  filter: grayscale(1) sepia(1) contrast(1.4) brightness(0.9)
+.sg-photo-2
+  grid-area: 8 / 5 / 12 / 10
+  filter: grayscale(1) sepia(1) contrast(1.4) brightness(0.9)
+  rotate: 3deg
+  translate: 0 20px
+.sg-photo-3
+  grid-area: 9 / 8 / 13 / 13
+  rotate: -5deg
+  scale: 0.75
+  filter: grayscale(1) sepia(1) contrast(1.4) brightness(0.9)
+
+.sg-stamp
+  @extend .arrival-stamp
+  top: auto
+  left: auto
+  bottom: 130px
+  right: 12px
 
 @media (max-width: 768px)
   .intro

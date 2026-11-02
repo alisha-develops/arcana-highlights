@@ -21,7 +21,7 @@ const intro = gsap.timeline({
     onComplete: () => {
         locked = false;
         document.body.style.overflow = "";
-        updateIndicators();
+        updatePage();
         playSpreadOne()
     }
 });
@@ -153,16 +153,11 @@ function resizeBook() {
 resizeBook();
 window.addEventListener("resize", resizeBook);
 
-const previousIndicator = document.getElementById("previous-indicator")!;
-const nextIndicator = document.getElementById("next-indicator")!;
-
 let isAnimating = false;
 
-function updateIndicators() {
-    previousIndicator.classList.toggle("visible", current > 1);
-    nextIndicator.classList.toggle("visible", current > 1 && current < leaves.length);
+function updatePage() {
     syncVideos();
-    syncVoice()
+    syncVoice();
 }
 
 function nextPage() {
@@ -177,7 +172,7 @@ function nextPage() {
 
     gsap.delayedCall(1, () => {
         isAnimating = false;
-        updateIndicators();
+        updatePage();
     });
 }
 
@@ -193,7 +188,7 @@ function previousPage() {
 
     gsap.delayedCall(1, () => {
         isAnimating = false;
-        updateIndicators();
+        updatePage();
     });
 }
 document.addEventListener("keydown", function(event) {
@@ -248,7 +243,7 @@ const HALF = PAGE_WIDTH/2
 function playSpreadOne() {
     if (location.hash === "#dev") {
         locked = false;
-        updateIndicators();
+        updatePage();
         return;
     }
 
@@ -261,7 +256,7 @@ function playSpreadOne() {
     gsap.timeline({
         onComplete: () => { 
             locked = false; 
-            updateIndicators(); 
+            updatePage(); 
         }
     })
     .to(spread, { 
@@ -291,5 +286,5 @@ if (location.hash === "#dev") {
 
     leaves[1]!.classList.add("flipped");
     current = 2;
-    updateIndicators();
+    updatePage();
 }
