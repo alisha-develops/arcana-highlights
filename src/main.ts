@@ -64,7 +64,9 @@ intro
         ease: "power2.inOut"
     },"+=1.4")
     .call(() => { 
-        cover.classList.add("flipped"); current = 1; 
+        cover.classList.add("turning", "flipped");
+        current = 1;
+        gsap.delayedCall(1, () => cover.classList.remove("turning"));
     }, [],"+=1")
     .to(spread, { 
         xPercent: 0, duration: 1,  
@@ -204,10 +206,12 @@ function nextPage() {
 
     isAnimating = true;
 
-    leaves[current]!.classList.add("flipped");
+    const leaf = leaves[current]!;
+    leaf.classList.add("turning", "flipped");
     current++;
 
     gsap.delayedCall(1, () => {
+        leaf.classList.remove("turning");
         isAnimating = false;
         updatePage();
         scheduleNextPage();
@@ -227,9 +231,12 @@ function previousPage() {
     isAnimating = true;
 
     current--;
-    leaves[current]!.classList.remove("flipped");
+    const leaf = leaves[current]!;
+    leaf.classList.add("turning");
+    leaf.classList.remove("flipped");
 
     gsap.delayedCall(1, () => {
+        leaf.classList.remove("turning");
         isAnimating = false;
         updatePage();
         scheduleNextPage();
