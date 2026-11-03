@@ -192,6 +192,9 @@ let isAnimating = false;
 function updatePage() {
     syncVideos();
     syncVoice();
+    if (current === 3) {
+        playNightSlideshow();
+    }
 }
 
 function nextPage() {
@@ -328,6 +331,31 @@ function playSpreadOne() {
         duration: 1, 
         ease: "power2.inOut" 
     }, "+=1.2")
+}
+
+const nightImages = gsap.utils.toArray<HTMLImageElement>(".night-frame img");
+
+function playNightSlideshow() {
+    if (!nightImages.length) return;
+    gsap.set(nightImages, { autoAlpha: 0 });
+
+    const timeline = gsap.timeline();
+    nightImages.forEach((img, index) => {
+        timeline.to(img, {
+            autoAlpha: 1,
+            duration: 0.5,
+            ease: "power1.inOut"
+        });
+        const previousImage = nightImages[index - 1];
+        if (previousImage) {
+            timeline.to(previousImage, {
+                autoAlpha: 0,
+                duration: 0.5,
+                ease: "power1.inOut"
+            }, "<");
+        }
+        timeline.to({}, { duration: 2.5 });
+    });
 }
 
 if (location.hash === "#dev") {
