@@ -334,6 +334,26 @@ function playSpreadOne() {
 }
 
 const nightImages = gsap.utils.toArray<HTMLImageElement>(".night-frame img");
+const nightCaptions = [
+    "stuck at changi",
+    "the elevator was scary",
+    "MRT closed",
+    "figuring out the top up card situation",
+    "finally out of the airport",
+    "the singapore sky",
+    "grab to J8"
+];
+const nightCaption = document.querySelector<HTMLElement>(".night-photo figcaption")!;
+const nightSubtitles = [
+    "looking back, i probably should've just stayed at the airport and waited until morning. but obviously, i didn't know that yet. so i started making my way towards the MRT station, thinking i'd just figure everything out once i got there.",
+    "it was really late, the elevator was empty, and everyone else already knew the MRT was closed. so there was just... nobody around so yeah even the elevator TERRIFIED ME",
+    "i was so used to Karachi, where you can find rides running pretty much throughout the night, that it didn't even cross my mind that Singapore's MRT would actually close.",
+    "then i saw this machine and thought, oh, is this where you tap your card to enter? nope. it was the top-up machine. THANKGOD i know how to read instructions",
+    "after all that, i finally made it out of the airport as i wad coordinating with daamin and he said he's booking me a grab",
+    "and omg look at the singapore skyyy",
+    "AND GUESS WHAT?! MY PHONE AND POWERBANK DIED. i lowkey panicked but i booked a taxi on my own and boom.. there goes my 24 sgd out of the 100 i had brought with me..."
+];
+const nightSubs = document.querySelector<HTMLElement>(".night-subs")!;
 
 function playNightSlideshow() {
     if (!nightImages.length) return;
@@ -341,6 +361,12 @@ function playNightSlideshow() {
 
     const timeline = gsap.timeline();
     nightImages.forEach((img, index) => {
+        const subtitle = nightSubtitles[index] ?? "";
+        const chars = { count: 0 };
+        timeline.call(() => {
+            nightCaption.textContent = nightCaptions[index] ?? "";
+            nightSubs.textContent = "";
+        });
         timeline.to(img, {
             autoAlpha: 1,
             duration: 0.5,
@@ -354,7 +380,32 @@ function playNightSlideshow() {
                 ease: "power1.inOut"
             }, "<");
         }
-        timeline.to({}, { duration: 2.5 });
+        timeline.to(chars, {
+            count: subtitle.length,
+            duration: subtitle.length * 0.035,
+            ease: "none",
+            onUpdate: () => {
+                nightSubs.textContent = subtitle.slice(
+                    0,
+                    Math.round(chars.count)
+                );
+            }
+        });
+        timeline.to({}, { duration: 1.5 });
+        timeline.to(nightSubs, {
+            autoAlpha: 0,
+            duration: 0.4
+        });
+        timeline.set(nightSubs, { 
+            autoAlpha: 1 
+        });
+    });
+    const hotelPhoto = document.querySelector<HTMLElement>(".night-hotel");
+    const hotelNote = document.querySelector<HTMLElement>(".night-hotel-note");
+    timeline.to([hotelPhoto, hotelNote], {
+        autoAlpha: 1,
+        duration: 0.8,
+        ease: "power1.out"
     });
 }
 
