@@ -149,7 +149,7 @@ typingIntro.to(enter, {
     duration: 0.8
 });
 
-import bgmFile from "../audio/super-trouper-cut.mp3";
+import bgmFile from "../audio/super-trouper-full.mp3";
 const bgm = new Audio(bgmFile);
 bgm.preload = "auto";
 bgm.loop = true;
@@ -192,9 +192,8 @@ let isAnimating = false;
 function updatePage() {
     syncVideos();
     syncVoice();
-    if (current === 3) {
-        playNightSlideshow();
-    }
+    if (current === 3) playNightSlideshow();
+    else stopNight();
 }
 
 function nextPage() {
@@ -266,22 +265,55 @@ function syncVideos() {
 }
 
 import voiceFile from "../audio/layover-doha.mp3";
+import changiairport1 from "../audio/changiairport1.mp3";
+import elevator2 from "../audio/elevator2.mp3";
+import yapkhi from "../audio/yapboutkhi.mp3";
+import topup from "../audio/topupmachine.mp3";
+import outside from "../audio/outoftheairport.mp3";
+import sky from "../audio/sky.mp3";
+import ingrab2 from "../audio/ingrab1.mp3";
+
+const NIGHT_VOICE_VOL = 0.5;
+const nightClips = [changiairport1, elevator2, yapkhi, topup, outside, sky, ingrab2].map((src) => {
+    const a = new Audio(src);
+    a.preload = "auto";
+    a.volume = NIGHT_VOICE_VOL;
+    return a;
+});
+
+let nightTl!: gsap.core.Timeline;
+let nightRunning = false
+
+function stopNight() {
+    if (!nightRunning) return;
+    nightTl.kill();
+    nightRunning = false;
+    nightClips.forEach((a) => { a.pause(); a.currentTime = 0; });
+    duck(false);
+    locked = false;
+}
 
 const voice = new Audio(voiceFile);
 voice.preload = "auto";
 
 const BGM_VOL = 0.4;
-const DUCK_VOL = 0.06; 
+const DUCK_VOL = 0.03; 
 
 function duck(on: boolean) {
     gsap.to(bgm, { volume: on ? DUCK_VOL : BGM_VOL, duration: 0.3, overwrite: "auto" });
 }
 
 voice.addEventListener("play", () => duck(true));
-voice.addEventListener("pause", () => duck(false));
-voice.addEventListener("ended", () => duck(false));
+voice.addEventListener("pause", () => {
+    if (!nightRunning) duck(false);
+});
+voice.addEventListener("ended", () => {
+    if (!nightRunning) duck(false);
+});
 introSfx.addEventListener("play", () => duck(true));
-introSfx.addEventListener("ended", () => duck(false));
+introSfx.addEventListener("ended", () => {
+    if (!nightRunning) duck(false);
+});
 
 function syncVoice() {
     if (current === 2) {
@@ -333,79 +365,131 @@ function playSpreadOne() {
     }, "+=1.2")
 }
 
+import nightText from "./subs.txt?raw";
 const nightImages = gsap.utils.toArray<HTMLImageElement>(".night-frame img");
-const nightCaptions = [
-    "stuck at changi",
-    "the elevator was scary",
-    "MRT closed",
-    "figuring out the top up card situation",
-    "finally out of the airport",
-    "the singapore sky",
-    "grab to J8"
-];
 const nightCaption = document.querySelector<HTMLElement>(".night-photo figcaption")!;
-const nightSubtitles = [
-    "looking back, i probably should've just stayed at the airport and waited until morning. but obviously, i didn't know that yet. so i started making my way towards the MRT station, thinking i'd just figure everything out once i got there.",
-    "it was really late, the elevator was empty, and everyone else already knew the MRT was closed. so there was just... nobody around so yeah even the elevator TERRIFIED ME",
-    "i was so used to Karachi, where you can find rides running pretty much throughout the night, that it didn't even cross my mind that Singapore's MRT would actually close.",
-    "then i saw this machine and thought, oh, is this where you tap your card to enter? nope. it was the top-up machine. THANKGOD i know how to read instructions",
-    "after all that, i finally made it out of the airport as i wad coordinating with daamin and he said he's booking me a grab",
-    "and omg look at the singapore skyyy",
-    "AND GUESS WHAT?! MY PHONE AND POWERBANK DIED. i lowkey panicked but i booked a taxi on my own and boom.. there goes my 24 sgd out of the 100 i had brought with me..."
-];
 const nightSubs = document.querySelector<HTMLElement>(".night-subs")!;
 
-function playNightSlideshow() {
-    if (!nightImages.length) return;
-    gsap.set(nightImages, { autoAlpha: 0 });
+const nightLines = nightText
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line !== "");
 
-    const timeline = gsap.timeline();
+const nightCaptions: string[] = [];
+const nightSubtitles: string[] = [];
+
+for (let i = 0; i < nightLines.length; i += 2) {
+    const caption = nightLines[i];
+    const subtitle = nightLines[i + 1];
+    if (caption !== undefined) nightCaptions.push(caption);
+    if (subtitle !== undefined) nightSubtitles.push(subtitle);
+}
+const nightTiming = [
+    { lead: 0.3, tail: 0.4 }, 
+    { lead: 0.2, tail: 0.3 }, 
+    { lead: 0.2, tail: 0.3 },
+    { lead: 0.2, tail: 0.3 },
+    { lead: 0.2, tail: 0.3 },
+    { lead: 0.2, tail: 0.3 }, 
+    { lead: 0.2, tail: 0.5 },
+];
+const nightLengths = [14, 13, 11, 10, 8, 4, 12];
+
+function playNightSlideshow() {
+    if (nightRunning) return;
+    if (!nightImages.length) return;
+
+    locked = true; 
+    duck(true); 
+    gsap.set(nightImages, { 
+        autoAlpha: 0 
+    });
+    gsap.set(nightSubs, { 
+        autoAlpha: 1 
+    });
+    gsap.set([".night-hotel", ".night-hotel-note"], { 
+        autoAlpha: 0 
+    });
+
+    const tl = gsap.timeline({
+        onComplete: () => {
+            nightRunning = false; 
+            duck(false);
+            locked = false;
+            scheduleNextPage();
+        }
+    });
+    nightTl = tl;
+    nightRunning = true;
+
     nightImages.forEach((img, index) => {
-        const subtitle = nightSubtitles[index] ?? "";
+        let subtitle = "";
+        const sub = nightSubtitles[index];
+        if (sub !== undefined) subtitle = sub;
+
+        let caption = "";
+        const cap = nightCaptions[index];
+        if (cap !== undefined) caption = cap;
+
+        let lead = 0;
+        let tail = 0.1;
+        const timing = nightTiming[index];
+        if (timing !== undefined) {
+            lead = timing.lead;
+            tail = timing.tail;
+        }
+
+        const clip = nightClips[index];
+        let clipLength = 10;
+        const known = nightLengths[index];
+        if (known !== undefined) clipLength = known;
+
         const chars = { count: 0 };
-        timeline.call(() => {
-            nightCaption.textContent = nightCaptions[index] ?? "";
+        const talk = Math.max((clipLength - lead - tail) * 0.85, 0.5);
+        const rest = Math.max(clipLength - lead - talk - 0.2, 0) + 0.3;
+
+        tl.call(() => {
+            nightCaption.textContent = caption;
             nightSubs.textContent = "";
+            if (clip !== undefined) clip.play().catch(console.error);
         });
-        timeline.to(img, {
-            autoAlpha: 1,
-            duration: 0.5,
-            ease: "power1.inOut"
-        });
+
+        tl.to(img, { autoAlpha: 1, duration: 0.5, ease: "power1.inOut" });
+
         const previousImage = nightImages[index - 1];
-        if (previousImage) {
-            timeline.to(previousImage, {
-                autoAlpha: 0,
-                duration: 0.5,
-                ease: "power1.inOut"
+        if (previousImage !== undefined) {
+            tl.to(previousImage, { 
+                autoAlpha: 0, 
+                duration: 0.5, 
+                ease: "power1.inOut" 
             }, "<");
         }
-        timeline.to(chars, {
+
+        tl.to(chars, {
             count: subtitle.length,
-            duration: subtitle.length * 0.035,
+            duration: talk,
             ease: "none",
             onUpdate: () => {
-                nightSubs.textContent = subtitle.slice(
-                    0,
-                    Math.round(chars.count)
-                );
+                nightSubs.textContent = subtitle.slice(0, Math.round(chars.count));
             }
+        }, `<+=${lead}`);
+
+        tl.to({}, { 
+            duration: rest 
         });
-        timeline.to({}, { duration: 1.5 });
-        timeline.to(nightSubs, {
-            autoAlpha: 0,
-            duration: 0.4
+        tl.to(nightSubs, { 
+            autoAlpha: 0, 
+            duration: 0.2 
         });
-        timeline.set(nightSubs, { 
+        tl.set(nightSubs, { 
             autoAlpha: 1 
         });
     });
-    const hotelPhoto = document.querySelector<HTMLElement>(".night-hotel");
-    const hotelNote = document.querySelector<HTMLElement>(".night-hotel-note");
-    timeline.to([hotelPhoto, hotelNote], {
-        autoAlpha: 1,
-        duration: 0.8,
-        ease: "power1.out"
+
+    tl.to([".night-hotel", ".night-hotel-note"], { 
+        autoAlpha: 1, 
+        duration: 0.8, 
+        ease: "power1.out" 
     });
 }
 
@@ -416,6 +500,7 @@ if (location.hash === "#dev") {
     intro.progress(1, false);
 
     leaves[1]!.classList.add("flipped");
-    current = 2;
+    leaves[2]!.classList.add("flipped");
+    current = 3;
     updatePage();
 }
