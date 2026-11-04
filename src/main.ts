@@ -422,6 +422,14 @@ function playNightSlideshow() {
     nightTl = tl;
     nightRunning = true;
 
+    tl.to(spread, {
+        scale: 2.5,
+        x: 390,
+        duration: 4,
+        ease: "power2.inOut",
+        transformOrigin: "50% 50%"
+    });
+
     nightImages.forEach((img, index) => {
         let subtitle = "";
         const sub = nightSubtitles[index];
@@ -490,6 +498,14 @@ function playNightSlideshow() {
         autoAlpha: 1, 
         duration: 0.8, 
         ease: "power1.out" 
+    });
+    tl.to(spread, {
+        y: -200,
+        duration: 2,
+        ease: "power2.inOut"
+    })
+    .to({}, {
+        duration: 8
     });
 }
 
