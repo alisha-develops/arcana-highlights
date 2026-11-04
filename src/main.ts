@@ -409,12 +409,12 @@ function playNightSlideshow() {
         autoAlpha: 0
     });
 
-    gsap.set(spread, {
-        scale: 1,
-        x: 0,
-        y: 0,
-        transformOrigin: "50% 50%"
-    });
+    // gsap.set(spread, {
+    //     scale: 1,
+    //     x: 0,
+    //     y: 0,
+    //     transformOrigin: "50% 50%"
+    // });
 
     const tl = gsap.timeline({
         onComplete: () => {
@@ -428,13 +428,13 @@ function playNightSlideshow() {
     nightTl = tl;
     nightRunning = true;
 
-    tl.to(spread, {
-        scale: 2.5,
-        x: 390,
-        duration: 3,
-        ease: "power2.inOut",
-        transformOrigin: "50% 50%"
-    });
+    // tl.to(spread, {
+    //     scale: 2.5,
+    //     x: 390,
+    //     duration: 3,
+    //     ease: "power2.inOut",
+    //     transformOrigin: "50% 50%"
+    // });
 
     nightImages.forEach((img, index) => {
         let subtitle = "";
@@ -515,20 +515,20 @@ function playNightSlideshow() {
         duration: 0.2,
         ease: "power1.out"
     });
-    tl.to(spread, {
-        y: -200,
-        duration: 1,
-        ease: "power2.inOut"
-    });
-    tl.to({}, { duration: 0.5 });
-    tl.to(spread, {
-        scale: 1,
-        x: 0,
-        y: 0,
-        duration: 3,
-        ease: "power2.inOut",
-        transformOrigin: "50% 50%"
-    });
+    // tl.to(spread, {
+    //     y: -200,
+    //     duration: 1,
+    //     ease: "power2.inOut"
+    // });
+    // tl.to({}, { duration: 0.5 });
+    // tl.to(spread, {
+    //     scale: 1,
+    //     x: 0,
+    //     y: 0,
+    //     duration: 3,
+    //     ease: "power2.inOut",
+    //     transformOrigin: "50% 50%"
+    // });
 }
 
 if (location.hash === "#dev") {
