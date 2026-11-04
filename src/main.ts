@@ -395,37 +395,43 @@ const nightTiming = [
 ];
 const nightLengths = [14, 13, 11, 10, 8, 4, 12];
 
+
 function playNightSlideshow() {
     if (nightRunning) return;
     if (!nightImages.length) return;
 
-    locked = true; 
-    duck(true); 
-    gsap.set(nightImages, { 
-        autoAlpha: 0 
+    locked = true;
+    duck(true);
+
+    gsap.set(nightImages, { autoAlpha: 0 });
+    gsap.set(nightSubs, { autoAlpha: 1 });
+    gsap.set([".night-hotel", ".night-hotel-note"], {
+        autoAlpha: 0
     });
-    gsap.set(nightSubs, { 
-        autoAlpha: 1 
-    });
-    gsap.set([".night-hotel", ".night-hotel-note"], { 
-        autoAlpha: 0 
+
+    gsap.set(spread, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        transformOrigin: "50% 50%"
     });
 
     const tl = gsap.timeline({
         onComplete: () => {
-            nightRunning = false; 
+            nightRunning = false;
             duck(false);
             locked = false;
             scheduleNextPage();
         }
     });
+
     nightTl = tl;
     nightRunning = true;
 
     tl.to(spread, {
         scale: 2.5,
         x: 390,
-        duration: 4,
+        duration: 3,
         ease: "power2.inOut",
         transformOrigin: "50% 50%"
     });
@@ -442,6 +448,7 @@ function playNightSlideshow() {
         let lead = 0;
         let tail = 0.1;
         const timing = nightTiming[index];
+
         if (timing !== undefined) {
             lead = timing.lead;
             tail = timing.tail;
@@ -450,6 +457,7 @@ function playNightSlideshow() {
         const clip = nightClips[index];
         let clipLength = 10;
         const known = nightLengths[index];
+
         if (known !== undefined) clipLength = known;
 
         const chars = { count: 0 };
@@ -459,17 +467,25 @@ function playNightSlideshow() {
         tl.call(() => {
             nightCaption.textContent = caption;
             nightSubs.textContent = "";
-            if (clip !== undefined) clip.play().catch(console.error);
+
+            if (clip !== undefined) {
+                clip.play().catch(console.error);
+            }
         });
 
-        tl.to(img, { autoAlpha: 1, duration: 0.5, ease: "power1.inOut" });
+        tl.to(img, {
+            autoAlpha: 1,
+            duration: 0.5,
+            ease: "power1.inOut"
+        });
 
         const previousImage = nightImages[index - 1];
+
         if (previousImage !== undefined) {
-            tl.to(previousImage, { 
-                autoAlpha: 0, 
-                duration: 0.5, 
-                ease: "power1.inOut" 
+            tl.to(previousImage, {
+                autoAlpha: 0,
+                duration: 0.5,
+                ease: "power1.inOut"
             }, "<");
         }
 
@@ -478,34 +494,40 @@ function playNightSlideshow() {
             duration: talk,
             ease: "none",
             onUpdate: () => {
-                nightSubs.textContent = subtitle.slice(0, Math.round(chars.count));
+                nightSubs.textContent = subtitle.slice(
+                    0,
+                    Math.round(chars.count)
+                );
             }
         }, `<+=${lead}`);
 
-        tl.to({}, { 
-            duration: rest 
-        });
-        tl.to(nightSubs, { 
-            autoAlpha: 0, 
-            duration: 0.2 
-        });
-        tl.set(nightSubs, { 
-            autoAlpha: 1 
-        });
-    });
+        tl.to({}, { duration: rest });
 
-    tl.to([".night-hotel", ".night-hotel-note"], { 
-        autoAlpha: 1, 
-        duration: 0.8, 
-        ease: "power1.out" 
+        tl.to(nightSubs, {
+            autoAlpha: 0,
+            duration: 0.2
+        });
+
+        tl.set(nightSubs, { autoAlpha: 1 });
+    });
+    tl.to([".night-hotel", ".night-hotel-note"], {
+        autoAlpha: 1,
+        duration: 0.2,
+        ease: "power1.out"
     });
     tl.to(spread, {
         y: -200,
-        duration: 2,
+        duration: 1,
         ease: "power2.inOut"
-    })
-    .to({}, {
-        duration: 8
+    });
+    tl.to({}, { duration: 0.5 });
+    tl.to(spread, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        duration: 3,
+        ease: "power2.inOut",
+        transformOrigin: "50% 50%"
     });
 }
 
