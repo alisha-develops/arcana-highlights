@@ -137,7 +137,7 @@ body
   // background-repeat: no-repeat
 
 .leaf
-  will-change: transform
+  // will-change: transform
   position: absolute
   top: 0
   left: $page-w
@@ -153,6 +153,7 @@ body
     z-index: var(--i)
   &.turning
     z-index: 100 
+    will-change: transform
 
 .face
   position: absolute

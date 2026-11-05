@@ -8,7 +8,7 @@ let current = 0;
 let locked = true;
 
 const readingTimes: Record<number, number> = {
-    1: 3000,
+    1: 800,
     2: 21000,
     3: 8000,
 };
@@ -39,7 +39,9 @@ intro
     .from(spread, { 
         y: "-100vh", 
         duration: 1.2, 
-        ease: "bounce.out" 
+        ease: "bounce.out",
+        onStart: lift,
+        onComplete: drop
     })
     .from(spread, { 
         rotation: -8,  
@@ -50,18 +52,24 @@ intro
         scale: 1.8, 
         transformOrigin: "75% 0%",
         duration: 1.2, 
-        ease: "power1.inOut"
+        ease: "power1.inOut",
+        onStart: lift,
+        onComplete: drop
     }, "+=1")
     .to (spread, {
         y: -300, 
         duration: 0.8, 
-        ease: "power1.inOut"
+        ease: "power1.inOut",
+        onStart: lift,
+        onComplete: drop
     },"+=0.5")
     .to (spread, {
         scale: 1,
         y: 0,
         duration: 1, 
-        ease: "power2.inOut"
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
     },"+=1.4")
     .call(() => { 
         cover.classList.add("turning", "flipped");
@@ -69,10 +77,12 @@ intro
         gsap.delayedCall(1, () => cover.classList.remove("turning"));
     }, [],"+=1")
     .to(spread, { 
-        xPercent: 0, duration: 1,  
-        ease: "power2.inOut" 
+        xPercent: 0, 
+        duration: 1,  
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
     }, "<");
-
 
 function scheduleNextPage() {
     if (hasAutoTurn) {
@@ -273,7 +283,7 @@ import outside from "../audio/outoftheairport.mp3";
 import sky from "../audio/sky.mp3";
 import ingrab2 from "../audio/ingrab1.mp3";
 
-const NIGHT_VOICE_VOL = 0.5;
+const NIGHT_VOICE_VOL = 1;
 const nightClips = [changiairport1, elevator2, yapkhi, topup, outside, sky, ingrab2].map((src) => {
     const a = new Audio(src);
     a.preload = "auto";
@@ -291,13 +301,14 @@ function stopNight() {
     nightClips.forEach((a) => { a.pause(); a.currentTime = 0; });
     duck(false);
     locked = false;
+    drop();
 }
 
 const voice = new Audio(voiceFile);
 voice.preload = "auto";
 
-const BGM_VOL = 0.4;
-const DUCK_VOL = 0.03; 
+const BGM_VOL = 0.6;
+const DUCK_VOL = 0.12; 
 
 function duck(on: boolean) {
     gsap.to(bgm, { volume: on ? DUCK_VOL : BGM_VOL, duration: 0.3, overwrite: "auto" });
@@ -314,6 +325,12 @@ introSfx.addEventListener("play", () => duck(true));
 introSfx.addEventListener("ended", () => {
     if (!nightRunning) duck(false);
 });
+function lift() {
+    spread.style.willChange = "transform";
+}
+function drop() {
+    spread.style.willChange = "auto";
+}
 
 function syncVoice() {
     if (current === 2) {
@@ -350,18 +367,24 @@ function playSpreadOne() {
         scale: Z, 
         x: HALF * Z,
         duration: 1.1, 
-        ease: "power2.inOut" 
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
     })
     .to(spread, { 
         x: -HALF * Z, 
         duration: 1.2, 
-        ease: "power2.inOut" 
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
     }, "+=1.2") 
     .to(spread, { 
         scale: 1, 
         x: 0, 
         duration: 1, 
-        ease: "power2.inOut" 
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
     }, "+=1.2")
 }
 
@@ -409,12 +432,12 @@ function playNightSlideshow() {
         autoAlpha: 0
     });
 
-    // gsap.set(spread, {
-    //     scale: 1,
-    //     x: 0,
-    //     y: 0,
-    //     transformOrigin: "50% 50%"
-    // });
+    gsap.set(spread, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        transformOrigin: "50% 50%"
+    });
 
     const tl = gsap.timeline({
         onComplete: () => {
@@ -427,14 +450,6 @@ function playNightSlideshow() {
 
     nightTl = tl;
     nightRunning = true;
-
-    // tl.to(spread, {
-    //     scale: 2.5,
-    //     x: 390,
-    //     duration: 3,
-    //     ease: "power2.inOut",
-    //     transformOrigin: "50% 50%"
-    // });
 
     nightImages.forEach((img, index) => {
         let subtitle = "";
@@ -510,26 +525,60 @@ function playNightSlideshow() {
 
         tl.set(nightSubs, { autoAlpha: 1 });
     });
+    const ZOOM_START = 1;
+    tl.to(spread, {
+        scale: 2.5,
+        x: 390,
+        duration: 1.5,
+        ease: "power2.inOut",
+        transformOrigin: "50% 50%",
+        onStart: lift,
+        onComplete: drop
+    }, ZOOM_START);
     tl.to([".night-hotel", ".night-hotel-note"], {
         autoAlpha: 1,
         duration: 0.2,
         ease: "power1.out"
     });
-    // tl.to(spread, {
-    //     y: -200,
-    //     duration: 1,
-    //     ease: "power2.inOut"
-    // });
-    // tl.to({}, { duration: 0.5 });
-    // tl.to(spread, {
-    //     scale: 1,
-    //     x: 0,
-    //     y: 0,
-    //     duration: 3,
-    //     ease: "power2.inOut",
-    //     transformOrigin: "50% 50%"
-    // });
+    tl.to(spread, {
+        y: -200,
+        duration: 1,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    });
+    tl.to({}, { duration: 0.5 });
+    tl.to(spread, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        duration: 3,
+        ease: "power2.inOut",
+        transformOrigin: "50% 50%",
+        onStart: lift,
+        onComplete: drop
+    });
 }
+
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        if (nightRunning) {
+            nightTl.pause();
+            nightClips.forEach((a) => a.pause());
+        }
+        voice.pause();
+    } else {
+        if (nightRunning) {
+            nightTl.resume();
+            nightClips.forEach((a) => {
+                if (a.currentTime > 0 && !a.ended) a.play().catch(console.error);
+            });
+        }
+        if (current === 2 && voice.currentTime > 0 && !voice.ended) {
+            voice.play().catch(console.error);
+        }
+    }
+});
 
 if (location.hash === "#dev") {
     typingIntro.kill();

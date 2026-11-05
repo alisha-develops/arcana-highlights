@@ -20,22 +20,22 @@ gsap has been another big part of the project. i've been using it for the book's
 
 ## a little peek at the book
 
-<div align="center">
-  <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
-    <div style="flex: 1 1 250px; min-width: 0;">
+<table>
+  <tr>
+    <td width="33.33%" valign="top">
       <img src="https://cdn.hackclub.com/01a1a892-3be5-7870-9b72-d03b370a7c5b/first%20page%20for%20arcana%20highlights.jpg" width="100%" alt="Scrapbook cover">
-      <p align="center"><sub>1st page: departure</sub></p>
-    </div>
-    <div style="flex: 1 1 250px; min-width: 0;">
+      <p align="center"><sub>the cover</sub></p>
+    </td>
+    <td width="33.33%" valign="top">
       <img src="https://cdn.hackclub.com/01a1a892-3d88-7847-b973-6f256477f76c/page%202%20ch2%20completed.jpg" width="100%" alt="Singapore arrival page">
-      <p align="center"><sub>2nd page: layover in doha + landing in sg</sub></p>
-    </div>
-    <div style="flex: 1 1 250px; min-width: 0;">
+      <p align="center"><sub>landing in singapore</sub></p>
+    </td>
+    <td width="33.33%" valign="top">
       <img src="https://cdn.hackclub.com/01a1a892-399d-75d6-b76f-931de36da0d4/3rd%20left%20pg%20completed.jpg" width="100%" alt="First night slideshow">
-      <p align="center"><sub>3rd page (incomplete) in singapore!</sub></p>
-    </div>
-  </div>
-</div>
+      <p align="center"><sub>the first night</sub></p>
+    </td>
+  </tr>
+</table>
 
 ## what's next?
 
