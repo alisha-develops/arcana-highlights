@@ -19,10 +19,6 @@ sass is particularly new territory for me. this is my first proper project using
 gsap has been another big part of the project. i've been using it for the book's entrance, 3D page turning animations, zooming, transitions and even the little typing effects for subtitles. there's been a LOT of trial and error involved, especially when trying to coordinate multiple animations without everything getting in each other's way but i've worked with gsap before so i like it
 
 ## a little peek at the book
-
-<table>
-  <tr>
-    <td width="33.33%" valign="top">
 <table>
   <tr>
     <td width="33.33%" valign="top">
