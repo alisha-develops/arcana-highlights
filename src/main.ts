@@ -10,7 +10,7 @@ let locked = true;
 const readingTimes: Record<number, number> = {
     1: 800,
     2: 21000,
-    3: 8000,
+    4: 10000
 };
 
 let autoTurn!: gsap.core.Tween;

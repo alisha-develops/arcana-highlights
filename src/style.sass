@@ -891,6 +891,53 @@ body
   opacity: 0
   visibility: hidden
 
+.venue .scrap-photo
+  display: flex
+  flex-direction: column
+  img
+    flex: 1 1 0
+    min-height: 0
+    height: auto
+    filter: grayscale(1) sepia(1) contrast(1.4) brightness(0.9)
+
+.venue-morning
+  grid-area: 3 / 1 / 9 / 5
+  rotate: -3deg
+  font-weight: 900
+  translate: 0 -10px
+
+.venue-road
+  grid-area: 3 / 5 / 9 / 9
+  rotate: 2deg
+  translate: 0 0px
+  font-weight: 900
+
+.venue-bus
+  grid-area: 3 / 9 / 9 / 13
+  rotate: -2deg
+  font-weight: 900
+  translate: 0 -10px
+
+.venue-together
+  grid-area: 9 / 3 / 13 / 11
+  rotate: 1.5deg
+  translate: 0 4px
+  font-weight: 900
+  img
+    aspect-ratio: 4 / 3
+    object-fit: cover
+
+.venue-stamp
+  @extend .departure-stamp
+  left: auto
+  bottom: auto
+  top: 6px
+  right: 270px
+  width: 64px
+  height: 64px
+  font-size: 0.65rem
+  font-weight: 900
+
 @media (max-width: 768px)
   .intro
     padding: 30px 8%
