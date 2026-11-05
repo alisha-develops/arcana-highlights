@@ -23,6 +23,9 @@ gsap has been another big part of the project. i've been using it for the book's
 <table>
   <tr>
     <td width="33.33%" valign="top">
+<table>
+  <tr>
+    <td width="33.33%" valign="top">
       <img src="https://cdn.hackclub.com/01a1a892-3be5-7870-9b72-d03b370a7c5b/first%20page%20for%20arcana%20highlights.jpg" width="100%" alt="Scrapbook cover">
       <p align="center"><sub>the cover</sub></p>
     </td>
