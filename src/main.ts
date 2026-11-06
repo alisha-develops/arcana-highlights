@@ -669,6 +669,7 @@ if (location.hash === "#dev") {
 
     leaves[1]!.classList.add("flipped");
     leaves[2]!.classList.add("flipped");
-    current = 3;
+    leaves[3]!.classList.add("flipped");
+    current = 4;
     updatePage();
 }
