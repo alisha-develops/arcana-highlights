@@ -10,7 +10,7 @@ let locked = true;
 const readingTimes: Record<number, number> = {
     1: 800,
     2: 21000,
-    4: 10000
+    3: 8000,
 };
 
 let autoTurn!: gsap.core.Tween;
@@ -202,6 +202,66 @@ let isAnimating = false;
 function updatePage() {
     syncVideos();
     syncVoice();
+
+    if (current === 2) {
+        locked = true;
+
+        gsap.timeline({
+            onComplete: () => {
+                locked = false;
+                scheduleNextPage();
+            }
+        })
+        .to(spread, {
+            scale: 1.8,
+            duration: 1.5,
+            x: 370,
+            y: 100,
+            ease: "power2.inOut",
+            onStart: lift,
+            onComplete: drop
+        })
+        .to({}, { duration: 1 })
+        .to(spread, {
+            scale: 1.8,
+            x: 370,
+            y: -180,
+            duration: 1.5,
+            ease: "power2.inOut",
+            onStart: lift,
+            onComplete: drop
+        })
+        .to({}, { duration: 15 })
+        .to(spread, {
+            scale: 1.6,
+            x: -270,
+            y: 100,
+            duration: 1.5,
+            ease: "power2.inOut",
+            onStart: lift,
+            onComplete: drop
+        })
+        .to({}, { duration: 1 })
+        .to(spread, {
+            scale: 1.6,
+            x: -270,
+            y: -90,
+            duration: 1.5,
+            ease: "power2.inOut",
+            onStart: lift,
+            onComplete: drop
+        })
+        .to({}, { duration: 2 })
+        .to(spread, {
+            scale: 1,
+            x: 0,
+            y: 0,
+            duration: 1.5,
+            ease: "power2.inOut",
+            onStart: lift,
+            onComplete: drop
+        });
+    }
     if (current === 3) playNightSlideshow();
     else stopNight();
 }
@@ -273,6 +333,7 @@ function syncVideos() {
         else v.pause();
     });
 }
+
 
 import voiceFile from "../audio/layover-doha.mp3";
 import changiairport1 from "../audio/changiairport1.mp3";
