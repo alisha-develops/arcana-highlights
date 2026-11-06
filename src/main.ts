@@ -613,12 +613,12 @@ function playNightSlideshow() {
         y: 200,
         duration: 2,
         ease: "power2.inOut",
-        onStart: lift,
+        onStart: () => {
+            lift();
+            toVenueVoice.currentTime = 0;
+            toVenueVoice.play().catch(console.error);
+        },
         onComplete: drop
-    });
-    tl.call(() => {
-        toVenueVoice.currentTime = 0;
-        toVenueVoice.play().catch(console.error);
     });
     tl.to({}, { duration: 4 });
     tl.to(spread, {
@@ -629,16 +629,6 @@ function playNightSlideshow() {
         onComplete: drop
     });
     tl.to({}, { duration: 2.5 });
-    tl.to(spread, {
-        scale: 1,
-        x: 0,
-        y: 0,
-        duration: 3,
-        ease: "power2.inOut",
-        transformOrigin: "50% 50%",
-        onStart: lift,
-        onComplete: drop
-    });
 }
 
 document.addEventListener("visibilitychange", () => {
