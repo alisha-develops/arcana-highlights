@@ -9,7 +9,7 @@ let locked = true;
 
 const readingTimes: Record<number, number> = {
     1: 800,
-    2: 21000,
+    2: 1000,
     3: 8000,
 };
 
@@ -204,7 +204,7 @@ function updatePage() {
     syncVoice();
 
     if (current === 2) {
-        locked = true;
+    locked = true;
 
         gsap.timeline({
             onComplete: () => {
@@ -214,53 +214,45 @@ function updatePage() {
         })
         .to(spread, {
             scale: 1.8,
-            duration: 1.5,
             x: 370,
             y: 100,
-            ease: "power2.inOut",
-            onStart: lift,
-            onComplete: drop
-        })
-        .to({}, { duration: 1 })
-        .to(spread, {
-            scale: 1.8,
-            x: 370,
-            y: -180,
+            transformOrigin: "50% 50%",
             duration: 1.5,
             ease: "power2.inOut",
             onStart: lift,
             onComplete: drop
         })
-        .to({}, { duration: 15 })
         .to(spread, {
-            scale: 1.6,
+            y: -100,
+            duration: 2,
+            ease: "power2.inOut",
+            onStart: lift,
+            onComplete: drop
+        }, "+=3")
+        .to(spread, {
             x: -270,
             y: 100,
-            duration: 1.5,
+            duration: 2,
             ease: "power2.inOut",
             onStart: lift,
             onComplete: drop
-        })
-        .to({}, { duration: 1 })
+        }, "+=3")
         .to(spread, {
-            scale: 1.6,
-            x: -270,
-            y: -90,
-            duration: 1.5,
+            y: -100,
+            duration: 2,
             ease: "power2.inOut",
             onStart: lift,
             onComplete: drop
-        })
-        .to({}, { duration: 2 })
+        }, "+=3")
         .to(spread, {
             scale: 1,
             x: 0,
             y: 0,
-            duration: 1.5,
+            duration: 1.8,
             ease: "power2.inOut",
             onStart: lift,
             onComplete: drop
-        });
+        }, "+=3");
     }
     if (current === 3) playNightSlideshow();
     else stopNight();
