@@ -335,6 +335,11 @@ import topup from "../audio/topupmachine.mp3";
 import outside from "../audio/outoftheairport.mp3";
 import sky from "../audio/sky.mp3";
 import ingrab2 from "../audio/ingrab1.mp3";
+import toVenueFile from "../audio/to-venue.mp3";
+
+const toVenueVoice = new Audio(toVenueFile);
+toVenueVoice.preload = "auto";
+toVenueVoice.volume = 1;
 
 const NIGHT_VOICE_VOL = 1;
 const nightClips = [changiairport1, elevator2, yapkhi, topup, outside, sky, ingrab2].map((src) => {
@@ -352,6 +357,8 @@ function stopNight() {
     nightTl.kill();
     nightRunning = false;
     nightClips.forEach((a) => { a.pause(); a.currentTime = 0; });
+    toVenueVoice.pause();
+    toVenueVoice.currentTime = 0;
     duck(false);
     locked = false;
     drop();
@@ -601,6 +608,27 @@ function playNightSlideshow() {
         onComplete: drop
     });
     tl.to({}, { duration: 0.5 });
+    tl.to(spread, {
+        x: -510,
+        y: 200,
+        duration: 2,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    });
+    tl.call(() => {
+        toVenueVoice.currentTime = 0;
+        toVenueVoice.play().catch(console.error);
+    });
+    tl.to({}, { duration: 4 });
+    tl.to(spread, {
+        y: -200,
+        duration: 1.5,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    });
+    tl.to({}, { duration: 2.5 });
     tl.to(spread, {
         scale: 1,
         x: 0,
