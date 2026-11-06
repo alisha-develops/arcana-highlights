@@ -629,6 +629,16 @@ function playNightSlideshow() {
         onComplete: drop
     });
     tl.to({}, { duration: 2.5 });
+    tl.to(spread, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        duration: 3,
+        ease: "power2.inOut",
+        transformOrigin: "50% 50%",
+        onStart: lift,
+        onComplete: drop
+    });
 }
 
 document.addEventListener("visibilitychange", () => {
