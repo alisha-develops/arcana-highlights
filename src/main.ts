@@ -256,6 +256,7 @@ function updatePage() {
     }
     if (current === 3) playNightSlideshow();
     else stopNight();
+    if (current === 4) playSpreadFour();
 }
 
 function nextPage() {
@@ -336,6 +337,11 @@ import outside from "../audio/outoftheairport.mp3";
 import sky from "../audio/sky.mp3";
 import ingrab2 from "../audio/ingrab1.mp3";
 import toVenueFile from "../audio/to-venue.mp3";
+import day1 from "../audio/day1.mp3";
+
+const dayOneVoice = new Audio(day1);
+dayOneVoice.preload = "auto";
+dayOneVoice.volume = 1;
 
 const toVenueVoice = new Audio(toVenueFile);
 toVenueVoice.preload = "auto";
@@ -381,6 +387,10 @@ voice.addEventListener("pause", () => {
 voice.addEventListener("ended", () => {
     if (!nightRunning) duck(false);
 });
+dayOneVoice.addEventListener("play", () => duck(true));
+dayOneVoice.addEventListener("pause", () => duck(false));
+dayOneVoice.addEventListener("ended", () => duck(false));
+
 introSfx.addEventListener("play", () => duck(true));
 introSfx.addEventListener("ended", () => {
     if (!nightRunning) duck(false);
@@ -399,8 +409,14 @@ function syncVoice() {
         voice.pause();
         voice.currentTime = 0;
     }
-}
 
+    if (current === 4) {
+        dayOneVoice.play().catch(console.error);
+    } else {
+        dayOneVoice.pause();
+        dayOneVoice.currentTime = 0;
+    }
+}
 const HALF = PAGE_WIDTH/2
 
 function playSpreadOne() {
@@ -446,6 +462,47 @@ function playSpreadOne() {
         onStart: lift,
         onComplete: drop
     }, "+=1.2")
+}
+
+let spreadFourTl!: gsap.core.Timeline;
+
+function playSpreadFour() {
+    locked = true;
+    gsap.set(spread, { transformOrigin: "50% 50%" });
+
+    spreadFourTl = gsap.timeline({
+        defaults: { ease: "sine.inOut", onStart: lift, onComplete: drop },
+        onComplete: () => {
+            locked = false;
+        }
+    });
+
+    spreadFourTl
+        .to(spread, { 
+            scale: 1.8, 
+            x: 370, 
+            y: 100, 
+            duration: 2 
+        })
+        .to(spread, { 
+            y: -100, 
+            duration: 15 
+        })
+        .to(spread, {
+            x: -270, 
+            y: 100, 
+            duration: 3 
+        })
+        .to(spread, { 
+            y: -100, 
+            duration: 15 
+        })
+        .to(spread, { 
+            scale: 1, 
+            x: 0, 
+            y: 0, 
+            duration: 5 
+        });
 }
 
 import nightText from "./subs.txt?raw";
