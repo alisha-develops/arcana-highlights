@@ -502,6 +502,9 @@ function playSpreadFour() {
     locked = true;
     gsap.set(spread, { transformOrigin: "50% 50%" });
 
+    const subsTl = gsap.timeline();
+    addSubtitles(subsTl, fourLines, 44);
+
     const crew = document.querySelector(".friends-group-one img") as HTMLImageElement;
     const all = document.querySelector(".friends-group-two img") as HTMLImageElement;
     const me = document.querySelector(".moments-me img") as HTMLImageElement;
@@ -515,7 +518,7 @@ function playSpreadFour() {
         }
     });
 
-    spreadFourTl
+        spreadFourTl
         .to(spread, { 
             scale: 1.8, 
             x: 370, 
@@ -526,40 +529,39 @@ function playSpreadFour() {
             y: 40, 
             duration: 3 
         })
-        .call(popPhoto, [crew, 4])
+        .call(popPhoto, [crew, 5])
         .to(spread, { 
             y: -40, 
             duration: 3 
-        }, "+=4") 
-        .call(popPhoto, [all, 4])
+        }, "+=5") 
+        .call(popPhoto, [all, 6])
         .to(spread, { 
             y: -100, 
             duration: 3 
-        }, "+=4") 
+        }, "+=6") 
         .to(spread, { 
             x: -270, 
             y: 100, 
             duration: 3 
-        })  
+        }) 
         .to(spread, { 
             y: 50, 
             duration: 3 
-        }) 
+        })
         .call(popPhoto, [me, 3])
         .to(spread, { 
             y: 0, 
             duration: 2 
-        }, "+=3")  
-        .call(popPhoto, [sandwich, 3])
+        }, "+=3")
+        .call(popPhoto, [sandwich, 4])
         .to(spread, { 
             y: -50, 
             duration: 2 
-        }, "+=3")
+        }, "+=4")
         .call(popPhoto, [lego, 3])
         .to(spread, { 
             scale: 1, 
-            x: 0, 
-            y: 0, 
+            x: 0, y: 0, 
             duration: 2 
         }, "+=3");
 }
@@ -573,16 +575,48 @@ function preloadNextVideos() {
     });
 }
 
+const spreadSubs = document.querySelector<HTMLElement>(".spread-subs")!;
+const TYPE_SPEED = 35;
+
+function addSubtitles(tl: gsap.core.Timeline, lines: string[], end: number) {
+    lines.forEach((line, i) => {
+        const start = Number(line.slice(0, line.indexOf(":")));
+        const text = line.slice(line.indexOf(":") + 1).trim();
+
+        let stop = end;
+        const next = lines[i + 1];
+        if (next !== undefined) {
+            stop = Number(next.slice(0, next.indexOf(":")));
+        }
+        const typing = Math.max(Math.min(text.length / TYPE_SPEED, stop - start - 0.3), 0.2);
+        const chars = { count: 0 };
+
+        tl.set(spreadSubs, { autoAlpha: 1 }, start);
+        tl.to(chars, {
+            count: text.length,
+            duration: typing,
+            ease: "none",
+            onUpdate: () => {
+                spreadSubs.textContent = text.slice(0, Math.round(chars.count));
+            }
+        }, start);
+        tl.set(spreadSubs, { autoAlpha: 0 }, stop);
+    });
+}
+
 import nightText from "./subs.txt?raw";
 const nightImages = gsap.utils.toArray<HTMLImageElement>(".night-frame img");
 const nightCaption = document.querySelector<HTMLElement>(".night-photo figcaption")!;
 const nightSubs = document.querySelector<HTMLElement>(".night-subs")!;
 
-const nightLines = nightText
+const allLines = nightText
     .split("\n")
     .map((line) => line.trim())
     .filter((line) => line !== "");
 
+const dividerAt = allLines.indexOf("---");
+const nightLines = allLines.slice(0, dividerAt);
+const fourLines = allLines.slice(dividerAt + 1);
 const nightCaptions: string[] = [];
 const nightSubtitles: string[] = [];
 
