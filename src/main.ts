@@ -766,23 +766,19 @@ function playNightSlideshow() {
     });
 }
 
+let resumeList: HTMLAudioElement[] = [];
+
 document.addEventListener("visibilitychange", () => {
+    const sounds = [introSfx, voice, dayOneVoice, toVenueVoice, ...nightClips, bgm];
+
     if (document.hidden) {
-        if (nightRunning) {
-            nightTl.pause();
-            nightClips.forEach((a) => a.pause());
-        }
-        voice.pause();
+        resumeList = sounds.filter((a) => !a.paused);
+        resumeList.forEach((a) => a.pause());
+        if (nightRunning) nightTl.pause();
     } else {
-        if (nightRunning) {
-            nightTl.resume();
-            nightClips.forEach((a) => {
-                if (a.currentTime > 0 && !a.ended) a.play().catch(console.error);
-            });
-        }
-        if (current === 2 && voice.currentTime > 0 && !voice.ended) {
-            voice.play().catch(console.error);
-        }
+        if (nightRunning) nightTl.resume();
+        resumeList.forEach((a) => a.play().catch(console.error));
+        resumeList = [];
     }
 });
 
