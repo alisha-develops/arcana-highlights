@@ -466,9 +466,46 @@ function playSpreadOne() {
 
 let spreadFourTl!: gsap.core.Timeline;
 
+const pop = document.querySelector(".pop") as HTMLElement;
+const popImg = pop.querySelector("img") as HTMLImageElement;
+
+function popPhoto(photo: HTMLImageElement, seconds: number) {
+    const tile = photo.closest("figure") as HTMLElement;
+    const from = photo.getBoundingClientRect();
+    const fit = Math.min(
+        (innerWidth * 0.8) / photo.naturalWidth,
+        (innerHeight * 0.8) / photo.naturalHeight
+    );
+    const width = photo.naturalWidth * fit;
+    const height = photo.naturalHeight * fit;
+
+    const small = {
+        x: from.left + from.width / 2 - innerWidth / 2,
+        y: from.top + from.height / 2 - innerHeight / 2,
+        scale: from.width / width
+    };
+
+    popImg.src = photo.src;
+    gsap.set(pop, { display: "grid" });
+    gsap.set(popImg, { width: width, height: height });
+    gsap.set(tile, { opacity: 0 }); 
+
+    gsap.timeline({ defaults: { ease: "power2.inOut" } })
+        .fromTo(popImg, small, { x: 0, y: 0, scale: 1, duration: 0.6 })
+        .to(popImg, { ...small, duration: 0.6 }, seconds - 0.6)
+        .set(tile, { opacity: 1 }, seconds)
+        .set(pop, { display: "none" }, seconds);
+}
+
 function playSpreadFour() {
     locked = true;
     gsap.set(spread, { transformOrigin: "50% 50%" });
+
+    const crew = document.querySelector(".friends-group-one img") as HTMLImageElement;
+    const all = document.querySelector(".friends-group-two img") as HTMLImageElement;
+    const me = document.querySelector(".moments-me img") as HTMLImageElement;
+    const sandwich = document.querySelector(".moments-icecream-photo img") as HTMLImageElement;
+    const lego = document.querySelector(".moments-lego-portrait img") as HTMLImageElement;
 
     spreadFourTl = gsap.timeline({
         defaults: { ease: "sine.inOut", onStart: lift, onComplete: drop },
@@ -485,24 +522,45 @@ function playSpreadFour() {
             duration: 2 
         })
         .to(spread, { 
-            y: -100, 
-            duration: 15 
+            y: 40, 
+            duration: 3 
         })
-        .to(spread, {
+        .call(popPhoto, [crew, 4])
+        .to(spread, { 
+            y: -40, 
+            duration: 3 
+        }, "+=4") 
+        .call(popPhoto, [all, 4])
+        .to(spread, { 
+            y: -100, 
+            duration: 3 
+        }, "+=4") 
+        .to(spread, { 
             x: -270, 
             y: 100, 
             duration: 3 
-        })
+        })  
         .to(spread, { 
-            y: -100, 
-            duration: 15 
-        })
+            y: 50, 
+            duration: 3 
+        }) 
+        .call(popPhoto, [me, 3])
+        .to(spread, { 
+            y: 0, 
+            duration: 2 
+        }, "+=3")  
+        .call(popPhoto, [sandwich, 3])
+        .to(spread, { 
+            y: -50, 
+            duration: 2 
+        }, "+=3")
+        .call(popPhoto, [lego, 3])
         .to(spread, { 
             scale: 1, 
             x: 0, 
             y: 0, 
-            duration: 5 
-        });
+            duration: 2 
+        }, "+=3");
 }
 
 import nightText from "./subs.txt?raw";
