@@ -10,7 +10,7 @@ let locked = true;
 const readingTimes: Record<number, number> = {
     1: 800,
     2: 1000,
-    3: 8000,
+    3: 300,
 };
 
 let autoTurn!: gsap.core.Tween;
@@ -202,6 +202,7 @@ let isAnimating = false;
 function updatePage() {
     syncVideos();
     syncVoice();
+    preloadNextVideos();
 
     if (current === 2) {
     locked = true;
@@ -563,6 +564,15 @@ function playSpreadFour() {
         }, "+=3");
 }
 
+function preloadNextVideos() {
+    document.querySelectorAll<HTMLVideoElement>("video").forEach((v) => {
+        if (v.dataset.spread !== String(current + 1)) return;
+        if (v.preload === "auto") return;
+        v.preload = "auto";
+        v.load();
+    });
+}
+
 import nightText from "./subs.txt?raw";
 const nightImages = gsap.utils.toArray<HTMLImageElement>(".night-frame img");
 const nightCaption = document.querySelector<HTMLElement>(".night-photo figcaption")!;
@@ -726,7 +736,7 @@ function playNightSlideshow() {
     tl.to(spread, {
         x: -510,
         y: 200,
-        duration: 2,
+        duration: 1,
         ease: "power2.inOut",
         onStart: () => {
             lift();
