@@ -11,6 +11,8 @@ const readingTimes: Record<number, number> = {
     1: 800,
     2: 1000,
     3: 300,
+    4: 500,
+    5: 1000,
 };
 
 let autoTurn!: gsap.core.Tween;
@@ -258,6 +260,8 @@ function updatePage() {
     if (current === 3) playNightSlideshow();
     else stopNight();
     if (current === 4) playSpreadFour();
+    if (current === 5) playSpreadFive();
+    if (current !== 5) gsap.set(polaroids, { autoAlpha: 0 });
 }
 
 function nextPage() {
@@ -515,6 +519,7 @@ function playSpreadFour() {
         defaults: { ease: "sine.inOut", onStart: lift, onComplete: drop },
         onComplete: () => {
             locked = false;
+            scheduleNextPage();
         }
     });
 
@@ -815,6 +820,138 @@ document.addEventListener("visibilitychange", () => {
         resumeList = [];
     }
 });
+
+const popSub = pop.querySelector(".pop-sub") as HTMLElement;
+const polaroids = gsap.utils.toArray<HTMLElement>(".polaroid");
+const photo_time = 6;
+const spine_size = 0.7;
+const shrink = 0.6;
+
+function spinePhoto(polaroid: HTMLElement, seconds: number) {
+    const photo = polaroid.querySelector("img") as HTMLImageElement;
+    const from = photo.getBoundingClientRect();
+    const spot = polaroid.getBoundingClientRect();
+    const book = spread.getBoundingClientRect();
+    const others = polaroids.filter((p) => p !== polaroid);
+
+    let text = "";
+    if (polaroid.dataset.sub !== undefined) text = polaroid.dataset.sub;
+
+    const fit = Math.min(
+        (book.width * spine_size) / photo.naturalWidth,
+        (book.height * spine_size) / photo.naturalHeight
+    );
+    const width = photo.naturalWidth * fit;
+    const height = photo.naturalHeight * fit;
+
+    const spine = {
+        x: book.left + book.width / 2 - innerWidth / 2,
+        y: book.top + book.height / 2 - innerHeight / 2
+    };
+    const home = {
+        x: from.left + from.width / 2 - innerWidth / 2,
+        y: from.top + from.height / 2 - innerHeight / 2,
+        scale: from.width / width
+    };
+
+    popImg.src = photo.src;
+    gsap.set(pop, { 
+        display: "grid" 
+    });
+    gsap.set(popImg, { 
+        width: width, 
+        height: height 
+    });
+    gsap.set(polaroid, { 
+        opacity: 0 
+    });
+
+    popSub.style.rotate = getComputedStyle(polaroid).rotate;
+    gsap.set(popSub, {
+        left: spot.left,
+        top: spot.top,
+        width: spot.width * 0.8
+    });
+    popSub.textContent = "";
+
+    const chars = {count: 0};
+    const typing = Math.max(Math.min(text.length / TYPE_SPEED, seconds - 1.8), 0.2);
+
+    const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
+
+    tl.fromTo(popImg, home, { 
+        x: spine.x, 
+        y: spine.y, 
+        scale: 1, 
+        duration: 0.6 
+    })
+    .to(others, { 
+        scale: shrink, 
+        duration: 0.6 
+    }, 0);
+
+    tl.set(popSub, { 
+        autoAlpha: 1 
+    }, 0.6);
+    tl.to(chars, {
+        count: text.length,
+        duration: typing,
+        ease: "none",
+        onUpdate: () => {
+            popSub.textContent = text.slice(0, Math.round(chars.count));
+        }
+    }, 0.6);
+
+    tl.set(popSub, {
+         autoAlpha: 0 
+        }, seconds - 0.6);
+    tl.to(popImg, { 
+        ...home, 
+        duration: 0.6 
+    }, seconds - 0.6);
+    tl.to(others, { 
+        scale: 1, 
+        duration: 0.6
+    }, seconds - 0.6);
+    tl.set(polaroid, { 
+        opacity: 1 
+    }, seconds);
+    tl.set(pop, { 
+        display: "none" 
+    }, seconds);
+}
+
+function playSpreadFive() {
+    locked = true;
+    gsap.set(polaroids, { 
+        autoAlpha: 0, 
+        y: -30 
+    });
+
+    const tl = gsap.timeline({
+        onComplete: () => {
+            locked = false;
+            scheduleNextPage();
+        }
+    });
+    tl.to(polaroids, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.4,
+        ease: "back.out(1.4)"
+    }, 0.5);
+
+    let time = 3.5;
+    polaroids.forEach((polaroid) => {
+        tl.call(spinePhoto, [polaroid, photo_time], time);
+        time += photo_time + 0.4;
+    });
+
+    tl.to({}, { 
+        duration: 0.1 
+    }, time);
+}
 
 if (location.hash === "#dev") {
     typingIntro.kill();

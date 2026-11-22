@@ -185,12 +185,12 @@ body
   
 .basepage 
   position: absolute
+  z-index: 0
   top: 0
   width: $page-w
   height: $page-h
   border-radius: 15px
   background: white
-  // border: 1px solid black
   &.left
     left: 0
   &.right
@@ -1161,9 +1161,6 @@ body
 .half-right img
   left: -352px
 
-.pano-b
-  opacity: 0
-
 .polaroid
   position: absolute
   z-index: 3
@@ -1197,34 +1194,39 @@ body
   top: 14px
   left: 14px
   rotate: -4deg
+  transform-origin: top left
 
 .pol-bl
   bottom: 14px
   left: 14px
   rotate: 3deg
+  transform-origin: bottom left
 
 .pol-tr
   top: 14px
   right: 16px
   rotate: 4deg
+  transform-origin: top right
 
 .pol-br
   bottom: 14px
   right: 16px
   rotate: -3deg
+  transform-origin: bottom right
 
 .pop-sub
   position: absolute
-  max-width: 260px
+  box-sizing: border-box
   margin: 0
-  padding: 8px 12px
-  background: rgba(20, 12, 4, 0.8)
+  padding: 0
   color: #f3e6c0
-  font-family: "datbox"
-  font-size: 0.9rem
-  line-height: 1.5
+  font-size: 0.85rem
+  line-height: 1.4
   opacity: 0
   visibility: hidden
+  word-spacing: 0.35em
+  letter-spacing: 0.04em
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.7)
 
 @media (max-width: 768px)
   .intro
