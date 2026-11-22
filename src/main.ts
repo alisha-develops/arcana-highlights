@@ -262,6 +262,8 @@ function updatePage() {
     if (current === 4) playSpreadFour();
     if (current === 5) playSpreadFive();
     if (current !== 5) gsap.set(polaroids, { autoAlpha: 0 });
+    if (current === 6) playSpreadSix();
+    if (current !== 6) gsap.set(envphotos, { autoAlpha: 0 });
 }
 
 function nextPage() {
@@ -947,9 +949,113 @@ function playSpreadFive() {
         tl.call(spinePhoto, [polaroid, photo_time], time);
         time += photo_time + 0.4;
     });
-
     tl.to({}, { 
         duration: 0.1 
+    }, time);
+}
+
+const envparts = gsap.utils.toArray<HTMLElement>(".env-back, .env-front");
+const envphotos = gsap.utils.toArray<HTMLElement>(".env-photo");
+const daysub = document.querySelector(".day-sub") as HTMLElement;
+const hold = 4;
+
+function showSub(text: string) {
+    daysub.textContent = text;
+    gsap.fromTo(
+        daysub,
+        {
+            autoAlpha: 0
+        },
+        {
+            autoAlpha: 1,
+            duration: 0.4
+        }
+    );
+}
+
+function playSpreadSix() {
+    locked = true;
+
+    gsap.set(envparts, {
+        scale: 1,
+        y: 0
+    });
+    gsap.set(envphotos, {
+        autoAlpha: 0,
+        y: 0,
+        scale: 1,
+        zIndex: 2
+    });
+    gsap.set(daysub, {
+        autoAlpha: 0
+    });
+
+    const tl = gsap.timeline({
+        onComplete: () => {
+            locked = false;
+            scheduleNextPage();
+        }
+    });
+
+    let time = 1;
+    envphotos.forEach((photo) => {
+        let text = "";
+        if (photo.dataset.sub !== undefined) text = photo.dataset.sub;
+        tl.to(photo, {
+            autoAlpha: 1,
+            y: -75,
+            duration: 0.7,
+            ease: "power2.out"
+        }, time);
+        tl.set(photo, {
+            zIndex: 5
+        }, time + 0.7);
+        tl.to(envparts, {
+            scale: 0.6,
+            y: 30,
+            duration: 0.8,
+            ease: "power2.inOut"
+        }, time + 0.7);
+        tl.to(photo, {
+            y: -57,
+            scale: 2.6,
+            duration: 0.9,
+            ease: "power2.inOut"
+        }, time + 0.7);
+        tl.call(showSub, [text], time + 1.6);
+        const back = time + 1.6 + hold;
+        tl.to(daysub, {
+            autoAlpha: 0,
+            duration: 0.3
+        }, back - 0.3);
+        tl.to(photo, {
+            y: -75,
+            scale: 1,
+            duration: 0.8,
+            ease: "power2.inOut"
+        }, back);
+        tl.to(envparts, {
+            scale: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.inOut"
+        }, back);
+        tl.set(photo, {
+            zIndex: 2
+        }, back + 0.8);
+        tl.to(photo, {
+            y: 0,
+            duration: 0.6,
+            ease: "power2.in"
+        }, back + 0.8);
+        tl.set(photo, {
+            autoAlpha: 0
+        }, back + 1.4);
+        time = back + 1.6;
+    });
+
+    tl.to({}, {
+        duration: 0.1
     }, time);
 }
 
@@ -963,6 +1069,7 @@ if (location.hash === "#dev") {
     leaves[2]!.classList.add("flipped");
     leaves[3]!.classList.add("flipped");
     leaves[4]!.classList.add("flipped");
-    current = 5;
+    leaves[5]!.classList.add("flipped");
+    current = 6;
     updatePage();
 }

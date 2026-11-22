@@ -1228,6 +1228,70 @@ body
   letter-spacing: 0.04em
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.7)
 
+.day-bg
+  position: absolute
+  inset: 0
+  overflow: hidden
+  border-radius: inherit
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    filter: sepia(0.7) contrast(1.15) brightness(0.7)
+
+.day-title
+  position: absolute
+  top: 30px
+  left: 0
+  right: 0
+  margin: 0
+  text-align: center
+  font-family: "datbox"
+  font-size: 3rem
+  color: #f3e6c0
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9)
+
+.day-sub
+  position: absolute
+  left: 24px
+  right: 24px
+  top: 24px
+  margin: 0
+  text-align: center
+  font-family: "datbox"
+  font-size: 0.85rem
+  line-height: 1.4
+  color: #2b1d0e
+
+.envelope div
+  position: absolute
+  left: 60px
+  bottom: 40px
+  width: 240px
+  height: 160px
+  transform-origin: bottom
+
+.env-back
+  background: #b98f55
+  z-index: 1
+
+.env-front
+  background: #d4a96a
+  z-index: 3
+  clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%)
+
+.env-photo
+  position: absolute
+  left: 125px
+  top: 215px
+  width: 110px
+  height: 84px
+  object-fit: cover
+  border: 6px solid #f3e6c0
+  box-sizing: border-box
+  z-index: 2
+  opacity: 0
+
 @media (max-width: 768px)
   .intro
     padding: 30px 8%
