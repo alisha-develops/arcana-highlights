@@ -1218,17 +1218,32 @@ body
   position: absolute
   box-sizing: border-box
   margin: 0
-  padding: 0
-  color: #f3e6c0
+  padding: 8px 10px 10px
+  min-height: 5.6em
+  background: #f3e6c0
+  color: #2b1d0e
+  font-family: "datbox"
   font-size: 0.85rem
   line-height: 1.4
+  text-align: left
+  word-spacing: 0.35em
+  font-weight: 900
+  letter-spacing: 0.04em
+  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.5)
   opacity: 0
   visibility: hidden
-  word-spacing: 0.35em
-  letter-spacing: 0.04em
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 0 6px rgba(0, 0, 0, 0.7)
+  &::before
+    content: ""
+    position: absolute
+    top: -8px
+    left: 50%
+    width: 44px
+    height: 14px
+    translate: -50% 0
+    background: rgba(230, 211, 163, 0.8)
+    border: 2px solid rgba(43, 29, 14, 0.2)
 
-.day-bg
+.day2-bg, .night2-bg
   position: absolute
   inset: 0
   overflow: hidden
@@ -1239,7 +1254,10 @@ body
     object-fit: cover
     filter: sepia(0.7) contrast(1.15) brightness(0.7)
 
-.day-title
+.night2-bg
+  opacity: 0
+
+.day2-title, .night2-title
   position: absolute
   top: 30px
   left: 0
@@ -1250,6 +1268,27 @@ body
   font-size: 3rem
   color: #f3e6c0
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9)
+  inset: 0
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  gap: 6px
+  span
+    display: block
+    line-height: 1
+    &:nth-child(1)
+      font-size: 3.4rem
+      rotate: -3deg
+    &:nth-child(2)
+      font-size: 2.2rem
+      rotate: 2deg
+    &:nth-child(3)
+      font-size: 4rem
+      rotate: -2deg
+
+.night2-title 
+  opacity: 0
 
 .day-sub
   position: absolute

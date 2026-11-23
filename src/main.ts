@@ -957,6 +957,9 @@ function playSpreadFive() {
 const envparts = gsap.utils.toArray<HTMLElement>(".env-back, .env-front");
 const envphotos = gsap.utils.toArray<HTMLElement>(".env-photo");
 const daysub = document.querySelector(".day-sub") as HTMLElement;
+const day2title = document.querySelector(".day2-title") as HTMLElement;
+const night2title = document.querySelector(".night2-title") as HTMLElement;
+const night2bg = document.querySelector(".night2-bg") as HTMLElement;
 const hold = 4;
 
 function showSub(text: string) {
@@ -984,9 +987,19 @@ function playSpreadSix() {
         autoAlpha: 0,
         y: 0,
         scale: 1,
-        zIndex: 2
+        zIndex: 2,
+        filter: "sepia(0.7) contrast(1.15) brightness(0.95)"
     });
     gsap.set(daysub, {
+        autoAlpha: 0
+    });
+    gsap.set(day2title, {
+        autoAlpha: 1
+    });
+    gsap.set(night2title, {
+        autoAlpha: 0
+    });
+    gsap.set(night2bg, {
         autoAlpha: 0
     });
 
@@ -997,10 +1010,28 @@ function playSpreadSix() {
         }
     });
 
+    let night2Started = false;
     let time = 1;
     envphotos.forEach((photo) => {
         let text = "";
         if (photo.dataset.sub !== undefined) text = photo.dataset.sub;
+        if (photo.classList.contains("night") && night2Started === false) {
+            night2Started = true;
+            tl.to(day2title, {
+                autoAlpha: 0,
+                duration: 0.8
+            }, time);
+            tl.to(night2title, {
+                autoAlpha: 1,
+                duration: 0.8
+            }, time + 0.4);
+            tl.to(night2bg, {
+                autoAlpha: 1,
+                duration: 1.5
+            }, time);
+            time += 1.5;
+        }
+
         tl.to(photo, {
             autoAlpha: 1,
             y: -75,
