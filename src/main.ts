@@ -1,5 +1,6 @@
 import "./style.sass";
 import {gsap} from "gsap";
+import emailjs from "@emailjs/browser";
 
 const spread = document.querySelector<HTMLElement>(".bookspread")!;
 const leaves = document.querySelectorAll<HTMLElement>(".leaf");
@@ -13,6 +14,10 @@ const readingTimes: Record<number, number> = {
     3: 300,
     4: 500,
     5: 1000,
+    6: 3000,
+    7: 1000,
+    8: 1000,
+    9: 3000,
 };
 
 let autoTurn!: gsap.core.Tween;
@@ -104,7 +109,8 @@ function scheduleNextPage() {
     const delay = readingTime / 1000;
 
     autoTurn = gsap.delayedCall(delay, () => {
-        nextPage();
+        if (current >= leaves.length) closebook();
+        else nextPage();
     });
     hasAutoTurn = true;
 }
@@ -269,7 +275,10 @@ function updatePage() {
 function nextPage() {
     if (locked) return;
     if (isAnimating) return;
-    if (current >= leaves.length) return;
+    if (current >= leaves.length) {
+        closebook();
+        return;
+    }
 
     if (hasAutoTurn) {
         autoTurn.kill();
@@ -323,6 +332,52 @@ document.addEventListener("keydown", function(event) {
         previousPage();
     }
 });
+
+let bookclosed = false;
+
+function closebook() {
+    if (bookclosed) return;
+    bookclosed = true;
+    locked = true;
+
+    if (hasAutoTurn) {
+        autoTurn.kill();
+        hasAutoTurn = false;
+    }
+
+    gsap.set(spread, {
+        transformOrigin: "50% 50%"
+    });
+    const tl = gsap.timeline();
+    tl.call(() => {
+        current = 0;
+        updatePage();
+    }, [], 0.3);
+
+    let time = 0.5;
+    for (let i = leaves.length - 1; i >= 0; i--) {
+        const leaf = leaves[i]!;
+        tl.call(() => {
+            leaf.classList.add("turning");
+            leaf.classList.remove("flipped");
+        }, [], time);
+        tl.call(() => {
+            leaf.classList.remove("turning");
+        }, [], time + 1);
+        time += 0.25;
+    }
+    tl.to(spread, {
+        xPercent: -25,
+        duration: 1,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, time - 0.25);
+    tl.to(guestbook, {
+        autoAlpha: 1,
+        duration: 1
+    }, time + 1);
+}
 
 // document.getElementById("nextspread")!.addEventListener("click", nextPage);
 // document.getElementById("prevspread")!.addEventListener("click", previousPage);
@@ -1090,6 +1145,39 @@ function playSpreadSix() {
     }, time);
 }
 
+const emailjs_service = "service_c9dq3nz";
+const emailjs_temp = "template_zqnemjh";
+const emailjskey = "EWeH-zQcrukhf7SOd";
+const gbForm = document.querySelector(".gb-form") as HTMLFormElement;
+const gbStatus = document.querySelector(".gb-status") as HTMLElement;
+const guestbook = document.querySelector(".guestbook") as HTMLElement;
+
+gbForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const data = new FormData(gbForm);
+    if (data.get("_gotcha") !== "") return;
+
+    gbStatus.textContent = "sending...";
+
+    try {
+        await emailjs.send(
+            emailjs_service,
+            emailjs_temp,
+            {
+                name: String(data.get("name")),
+                slack: String(data.get("slack")),
+                message: String(data.get("message"))
+            },
+            { publicKey: emailjskey }
+        );
+        gbStatus.textContent = "sent! i'll pin it on the board soon";
+        gbForm.reset();
+    } catch (error) {
+        gbStatus.textContent = "oops, that didn't work. try again?";
+    }
+});
+
 if (location.hash === "#dev") {
     typingIntro.kill();
     introScreen.remove();
@@ -1101,6 +1189,9 @@ if (location.hash === "#dev") {
     leaves[3]!.classList.add("flipped");
     leaves[4]!.classList.add("flipped");
     leaves[5]!.classList.add("flipped");
-    current = 6;
+    leaves[6]!.classList.add("flipped");
+    // leaves[7]!.classList.add("flipped");
+    // leaves[8]!.classList.add("flipped");
+    current = 7;
     updatePage();
 }

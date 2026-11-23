@@ -1331,6 +1331,98 @@ body
   z-index: 2
   opacity: 0
 
+.guestbook
+  position: fixed
+  top: 50%
+  left: 50%
+  translate: -50% -50%
+  rotate: -2deg
+  width: 320px
+  padding: 24px 20px 20px
+  box-sizing: border-box
+  background: #f3e6c0
+  box-shadow: 3px 5px 14px rgba(0, 0, 0, 0.5)
+  z-index: 40
+  opacity: 0
+  visibility: hidden
+  &::before
+    content: ""
+    position: absolute
+    top: -9px
+    left: 50%
+    width: 60px
+    height: 16px
+    translate: -50% 0
+    background: rgba(230, 211, 163, 0.8)
+    border: 2px solid rgba(43, 29, 14, 0.2)
+
+.gb-title
+  margin: 0 0 4px
+  font-family: "datbox"
+  font-size: 1.6rem
+  color: #2b1d0e
+
+.gb-hint
+  margin: 0 0 14px
+  font-family: "datbox"
+  font-size: 0.8rem
+  font-weight: 900
+  color: rgba(43, 29, 14, 0.7)
+
+.gb-form
+  display: grid
+  gap: 10px
+  margin: 0
+  input, textarea
+    width: 100%
+    box-sizing: border-box
+    padding: 8px 10px
+    background: #fbf4dd
+    border: 2px solid rgba(43, 29, 14, 0.45)
+    border-radius: 6px
+    color: #2b1d0e
+    font-family: "datbox"
+    font-size: 0.9rem
+    outline: none
+    font-weight: 900
+    &::placeholder
+      color: rgba(43, 29, 14, 0.5)
+    &:focus
+      border-color: #2b1d0e
+      background: #fffaf0
+  textarea
+    min-height: 90px
+    resize: none
+  button
+    padding: 9px
+    background: #b98f55
+    border: 2px solid #2b1d0e
+    border-radius: 6px
+    color: #2b1d0e
+    font-family: "datbox"
+    font-size: 1rem
+    cursor: pointer
+    box-shadow: 2px 3px 0 rgba(43, 29, 14, 0.6)
+    font-weight: 900
+    &:hover
+      background: #c99f65
+    &:active
+      translate: 2px 3px
+      box-shadow: none
+
+.gb-trap
+  position: absolute
+  left: -9999px
+
+.gb-status
+  min-height: 1.2em
+  margin: 0
+  color: #2b1d0e
+  font-family: "datbox"
+  font-size: 0.8rem
+  font-weight: 900
+  line-height: 1.3
+
 @media (max-width: 768px)
   .intro
     padding: 30px 8%

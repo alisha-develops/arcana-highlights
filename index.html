@@ -324,18 +324,38 @@
                 </div>
                 <div class="face back"></div>
             </div>
+            <div class="leaf">
+                <div class="face front"></div>
+                <div class="face back"></div>
+            </div>
+            <div class="leaf">
+                <div class="face front"></div>
+                <div class="face back"></div>
+            </div>
         </div>
     </div>
-    
+    <section class="guestbook">
+        <h2 class="gb-title">leave a comment/note!</h2>
+        <p class="gb-hint">i'll add it in the next update on the dashboard with your name!</p>
+        <form class="gb-form">
+            <input type="text" name="name" maxlength="20" placeholder="your name" required>
+            <input type="text" name="slack" maxlength="20" placeholder="slack display (if a hackclubber)">
+            <textarea name="message" maxlength="200" placeholder="what did you think?" required></textarea>
+            <input type="text" name="_gotcha" class="gb-trap" tabindex="-1" autocomplete="off">
+            <button type="submit">send</button>
+            <p class="gb-status"></p>
+        </form>
+    </section>
+
     <!-- <div class="booknav">
         <button id="prevspread">←</button>
         <button id="nextspread">→</button>
     </div> -->
     <p class="spread-subs"></p>
+    <div class="pop"><img alt=""><p class="pop-sub"></p></div>
     <footer class="footer">
         made with love ♡ by <a href="https://adventurous-alisha.vercel.app" target="_blank">alisha</a>! :D
     </footer>
-    <div class="pop"><img alt=""><p class="pop-sub"></p></div>
     <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
