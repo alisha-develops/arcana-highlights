@@ -1192,23 +1192,115 @@ function showCap(text: string) {
 function playSpreadSeven() {
     locked = true;
 
-    gsap.set(ppstamps, {
-        autoAlpha: 0
-    });
-    gsap.set(ppitems, {
-        autoAlpha: 0
-    });
-    gsap.set(ppcap, {
-        autoAlpha: 0
-    });
-
+    gsap.set([
+        ppstamps, 
+        ppitems, 
+        ppcap
+    ], { autoAlpha: 0 });
+    
     const tl = gsap.timeline({
         onComplete: () => {
             locked = false;
             scheduleNextPage();
         }
     });
-
+    // tl.to (spread, {
+    //     scale: 1.2,
+    //         transformOrigin: "50% 50%",
+    //         duration: 1.5,
+    //         ease: "power2.inOut",
+    //         onStart: lift,
+    //         onComplete: drop
+    // }, "+=1")
+    tl.to (spread, {
+        scale: 1.8,
+        x: 360,
+        y: 100,
+        transformOrigin: "50% 50%",
+        duration: 1.5,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, "+=1")
+    tl.to (spread, {
+        scale: 1.5,
+        x: 0,
+        y: 0,
+        transformOrigin: "50% 50%",
+        duration: 1.5,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, "+=1")
+    tl.to (spread, {
+        scale: 1.8,
+        x: 220,
+        y: 100,
+        transformOrigin: "50% 50%",
+        duration: 1.5,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, "+=4")
+    tl.to (spread, {
+        scale: 1.5,
+        x: 0,
+        y: 0,
+        transformOrigin: "50% 50%",
+        duration: 1.5,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, "+=1")
+    tl.to (spread, {
+        scale: 1.8,
+        x: 390,
+        y: -100,
+        transformOrigin: "50% 50%",
+        duration: 1.5,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, "+=3")
+    tl.to (spread, {
+        scale: 1.5,
+        x: 0,
+        y: 0,
+        transformOrigin: "50% 50%",
+        duration: 1.5,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, "+=1")
+    tl.to (spread, {
+        scale: 1.8,
+        x: 220,
+        y: -100,
+        transformOrigin: "50% 50%",
+        duration: 1,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, "+=2")
+    tl.to (spread, {
+        scale: 1.5,
+        x: 0,
+        y: 0,
+        transformOrigin: "50% 50%",
+        duration: 1,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, "+=1")
+    tl.to (spread, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        duration: 1.5,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, "+=2")
     tl.from(".pp-title", {
         y: -40,
         autoAlpha: 0,
