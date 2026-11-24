@@ -270,6 +270,8 @@ function updatePage() {
     if (current !== 5) gsap.set(polaroids, { autoAlpha: 0 });
     if (current === 6) playSpreadSix();
     if (current !== 6) gsap.set(envphotos, { autoAlpha: 0 });
+    if (current === 7) playSpreadSeven();
+    if (current !== 7) gsap.set([ppstamps, ppitems, ppcap], { autoAlpha: 0 });
 }
 
 function nextPage() {
@@ -1177,6 +1179,112 @@ gbForm.addEventListener("submit", async (event) => {
         gbStatus.textContent = "oops, that didn't work. try again?";
     }
 });
+
+const ppstamps = gsap.utils.toArray<HTMLElement>(".pp-stamp");
+const ppitems = gsap.utils.toArray<HTMLElement>(".pp-item");
+const ppcap = document.querySelector(".pp-cap") as HTMLElement;
+const stop_times = [8, 8, 5, 7];
+
+function showCap(text: string) {
+    ppcap.textContent = text;
+}
+
+function playSpreadSeven() {
+    locked = true;
+
+    gsap.set(ppstamps, {
+        autoAlpha: 0
+    });
+    gsap.set(ppitems, {
+        autoAlpha: 0
+    });
+    gsap.set(ppcap, {
+        autoAlpha: 0
+    });
+
+    const tl = gsap.timeline({
+        onComplete: () => {
+            locked = false;
+            scheduleNextPage();
+        }
+    });
+
+    tl.from(".pp-title", {
+        y: -40,
+        autoAlpha: 0,
+        duration: 0.6,
+        ease: "back.out(1.4)"
+    }, 0.3);
+    tl.from(".pp-sub, .pp-box", {
+        autoAlpha: 0,
+        duration: 0.5,
+        stagger: 0.1
+    }, 0.7);
+
+    let time = 1.5;
+    ppstamps.forEach((stamp, i) => {
+        const stopItems = gsap.utils.toArray<HTMLElement>(`.pp-item[data-stop="${i + 1}"]`);
+
+        let text = "";
+        if (stamp.dataset.cap !== undefined) text = stamp.dataset.cap;
+
+        let length = 7;
+        const known = stop_times[i];
+        if (known !== undefined) length = known;
+        tl.fromTo(stamp, {
+            scale: 2.5,
+            autoAlpha: 0
+        }, {
+            scale: 1,
+            autoAlpha: 1,
+            duration: 0.35,
+            ease: "power4.in"
+        }, time);
+        tl.fromTo(stopItems, {
+            y: -90,
+            rotation: gsap.utils.wrap([10, -10, 8]),
+            autoAlpha: 0
+        }, {
+            y: 0,
+            rotation: 0,
+            autoAlpha: 1,
+            duration: 0.6,
+            ease: "back.out(1.2)",
+            stagger: 0.4
+        }, time + 0.5);
+        stopItems.forEach((item) => {
+            if (item instanceof HTMLVideoElement) {
+                tl.call(() => {
+                    item.currentTime = 0;
+                    item.play().catch(() => {});
+                }, [], time + 0.5);
+            }
+        });
+        tl.call(showCap, [text], time + 1.8);
+        tl.to(ppcap, {
+            autoAlpha: 1,
+            duration: 0.4
+        }, time + 1.8);
+        if (i < ppstamps.length - 1) {
+            tl.to(stopItems, {
+                y: 60,
+                autoAlpha: 0,
+                duration: 0.5,
+                ease: "power2.in"
+            }, time + length - 0.5);
+            tl.to(ppcap, {
+                autoAlpha: 0,
+                duration: 0.3
+            }, time + length - 0.5);
+        }
+
+        time += length;
+    });
+
+    tl.to({}, {
+        duration: 3
+    }, time);
+}
 
 if (location.hash === "#dev") {
     typingIntro.kill();

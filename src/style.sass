@@ -1423,6 +1423,206 @@ body
   font-weight: 900
   line-height: 1.3
 
+.pp-title
+  position: absolute
+  top: 18px
+  left: 0
+  right: 0
+  margin: 0
+  text-align: center
+  font-family: "datbox"
+  font-size: 2.5rem
+  letter-spacing: 3px
+  color: #f6e7c1
+  z-index: 3
+
+.pp-stamp
+  position: absolute
+  z-index: 3
+  display: grid
+  place-items: center
+  text-align: center
+  padding: 6px
+  box-sizing: border-box
+  font-family: "datbox"
+  font-size: 1.05rem
+  font-weight: 900
+  line-height: 1.12
+  letter-spacing: 1px
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45)
+  mask-image: radial-gradient(circle, black 68%, rgba(0, 0, 0, 0.82) 100%)
+  cursor: pointer
+  transition: transform 0.2s ease-out
+  opacity: 0
+  visibility: hidden
+
+.pp-st1
+  left: 26px
+  top: 94px
+  width: 154px
+  height: 86px
+  border: 3px solid #b84225
+  outline: 1.5px solid #b84225
+  outline-offset: -6px
+  border-radius: 3px
+  color: #a8371c
+  background-color: rgba(245, 226, 188, 0.9)
+  rotate: -8deg
+
+.pp-st2
+  left: 174px
+  top: 122px
+  width: 146px
+  height: 76px
+  border: 3.5px solid #2d6575
+  border-radius: 12px
+  color: #255766
+  background-color: rgba(217, 236, 238, 0.9)
+  rotate: 6deg
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45), inset 0 0 0 2px transparent, inset 0 0 0 3.5px rgba(45, 101, 117, 0.65)
+
+.pp-st3
+  left: 42px
+  top: 204px
+  width: 112px
+  height: 112px
+  border: 4px double #ad2b2b
+  outline: 1.5px dashed #ad2b2b
+  outline-offset: -7px
+  border-radius: 50%
+  color: #9e2222
+  background-color: rgba(246, 222, 212, 0.92)
+  rotate: 12deg
+
+.pp-st4
+  left: 164px
+  top: 224px
+  width: 162px
+  height: 82px
+  border: 3px dashed #5c3116
+  outline: 2px solid #5c3116
+  outline-offset: -6px
+  border-radius: 4px
+  color: #4d2710
+  background-color: rgba(242, 219, 184, 0.92)
+  rotate: -5deg
+
+.pp-item
+  position: absolute
+  object-fit: cover
+  box-sizing: border-box
+  border: 6px solid #f3e6c0
+  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.45)
+  filter: sepia(0.7) contrast(1.15) brightness(0.95)
+  opacity: 0
+  visibility: hidden
+  backface-visibility: hidden
+  &:nth-child(1)
+    left: 14px
+    top: 44px
+    width: 200px
+    height: 140px
+    rotate: -3deg
+  &:nth-child(2)
+    left: 214px
+    top: 40px
+    width: 112px
+    height: 160px
+    rotate: 4deg
+  &:nth-child(3)
+    left: 20px
+    top: 190px
+    width: 170px
+    height: 120px
+    rotate: 3deg
+  &:nth-child(4)
+    left: 236px
+    top: 190px
+    width: 80px
+    height: 124px
+    rotate: -4deg
+  &:nth-child(5)
+    left: 16px
+    top: 44px
+    width: 150px
+    height: 112px
+    rotate: -4deg
+  &:nth-child(6)
+    left: 176px
+    top: 52px
+    width: 150px
+    height: 112px
+    rotate: 3deg
+  &:nth-child(7)
+    left: 30px
+    top: 170px
+    width: 150px
+    height: 112px
+    rotate: -2deg
+  &:nth-child(8)
+    left: 170px
+    top: 176px
+    width: 150px
+    height: 112px
+    rotate: 4deg
+  &:nth-child(9)
+    left: 50px
+    top: 70px
+    width: 240px
+    height: 180px
+    rotate: -2deg
+  &:nth-child(10)
+    left: 140px
+    top: 50px
+    width: 180px
+    height: 135px
+    rotate: 3deg
+  &:nth-child(11)
+    left: 24px
+    top: 176px
+    width: 180px
+    height: 135px
+    rotate: -4deg
+
+.pp-cap
+  position: absolute
+  left: 26px
+  right: 26px
+  bottom: 20px
+  margin: 0
+  padding: 8px 10px
+  background: #f3e6c0
+  color: #2b1d0e
+  font-family: "datbox"
+  font-size: 0.8rem
+  line-height: 1.35
+  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.4)
+  rotate: -1deg
+  opacity: 0
+  font-weight:900
+  visibility: hidden
+  &::before
+    content: ""
+    position: absolute
+    top: -8px
+    left: 50%
+    width: 44px
+    height: 14px
+    translate: -50% 0
+    background: rgba(230, 211, 163, 0.8)
+    border: 2px solid rgba(43, 29, 14, 0.2)
+  
+.day3-bg
+  position: absolute
+  inset: 0
+  overflow: hidden
+  border-radius: inherit
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    filter: sepia(0.7) contrast(1.15) brightness(0.7)
+
 @media (max-width: 768px)
   .intro
     padding: 30px 8%
