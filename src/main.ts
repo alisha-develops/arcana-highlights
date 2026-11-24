@@ -1204,114 +1204,79 @@ function playSpreadSeven() {
             scheduleNextPage();
         }
     });
-    // tl.to (spread, {
-    //     scale: 1.2,
-    //         transformOrigin: "50% 50%",
-    //         duration: 1.5,
-    //         ease: "power2.inOut",
-    //         onStart: lift,
-    //         onComplete: drop
-    // }, "+=1")
-    tl.to (spread, {
-        scale: 1.8,
-        x: 360,
-        y: 100,
+    const stops = [
+        {
+            x: 360, 
+            y: 100, 
+            scale: 1.8,
+            duration: 1.5, 
+            hold: "+=1", 
+            resetHold: "+=1" 
+        },
+        { 
+            x: 220, 
+            y: 100, 
+            scale: 1.8, 
+            duration: 1.5, 
+            hold: "+=4", 
+            resetHold: "+=1" 
+        },
+        { 
+            x: 390, 
+            y: -100, 
+            scale: 1.8, 
+            duration: 1.5, 
+            hold: "+=3", 
+            resetHold: "+=1" 
+        },
+        { 
+            x: 220, 
+            y: -100, 
+            scale: 1.8, 
+            duration: 1, 
+            hold: "+=2", 
+            resetHold: "+=1" 
+        },
+    ];
+    const move7 = (vars: gsap.TweenVars, position: gsap.Position) => {
+    tl.to(
+        spread,
+        {
         transformOrigin: "50% 50%",
-        duration: 1.5,
         ease: "power2.inOut",
         onStart: lift,
-        onComplete: drop
-    }, "+=1")
-    tl.to (spread, {
-        scale: 1.5,
-        x: 0,
-        y: 0,
-        transformOrigin: "50% 50%",
-        duration: 1.5,
-        ease: "power2.inOut",
-        onStart: lift,
-        onComplete: drop
-    }, "+=1")
-    tl.to (spread, {
-        scale: 1.8,
-        x: 220,
-        y: 100,
-        transformOrigin: "50% 50%",
-        duration: 1.5,
-        ease: "power2.inOut",
-        onStart: lift,
-        onComplete: drop
-    }, "+=4")
-    tl.to (spread, {
-        scale: 1.5,
-        x: 0,
-        y: 0,
-        transformOrigin: "50% 50%",
-        duration: 1.5,
-        ease: "power2.inOut",
-        onStart: lift,
-        onComplete: drop
-    }, "+=1")
-    tl.to (spread, {
-        scale: 1.8,
-        x: 390,
-        y: -100,
-        transformOrigin: "50% 50%",
-        duration: 1.5,
-        ease: "power2.inOut",
-        onStart: lift,
-        onComplete: drop
-    }, "+=3")
-    tl.to (spread, {
-        scale: 1.5,
-        x: 0,
-        y: 0,
-        transformOrigin: "50% 50%",
-        duration: 1.5,
-        ease: "power2.inOut",
-        onStart: lift,
-        onComplete: drop
-    }, "+=1")
-    tl.to (spread, {
-        scale: 1.8,
-        x: 220,
-        y: -100,
-        transformOrigin: "50% 50%",
-        duration: 1,
-        ease: "power2.inOut",
-        onStart: lift,
-        onComplete: drop
-    }, "+=2")
-    tl.to (spread, {
-        scale: 1.5,
-        x: 0,
-        y: 0,
-        transformOrigin: "50% 50%",
-        duration: 1,
-        ease: "power2.inOut",
-        onStart: lift,
-        onComplete: drop
-    }, "+=1")
-    tl.to (spread, {
-        scale: 1,
-        x: 0,
-        y: 0,
-        duration: 1.5,
-        ease: "power2.inOut",
-        onStart: lift,
-        onComplete: drop
-    }, "+=2")
+        onComplete: drop,
+        ...vars,
+        },
+        position
+    );
+    };
+    stops.forEach((s, i) => {
+    move7({ 
+        scale: s.scale, 
+        x: s.x, 
+        y: s.y, 
+        duration: s.duration 
+    }, i === 0 ? "+=1" : s.hold);
+    move7({ 
+        scale: 1.5, 
+        x: 0, 
+        y: 0, 
+        duration: s.duration 
+    }, s.resetHold);
+    });
+    move7({ 
+        scale: 1, 
+        x: 0, 
+        y: 0, 
+        duration: 1.5 
+    }, "+=2");
     tl.from(".pp-title", {
         y: -40,
         autoAlpha: 0,
         duration: 0.6,
         ease: "back.out(1.4)"
     }, 0.3);
-    tl.from(".pp-sub, .pp-box", {
-        autoAlpha: 0,
-        duration: 0.5,
-        stagger: 0.1
-    }, 0.7);
 
     let time = 1.5;
     ppstamps.forEach((stamp, i) => {
