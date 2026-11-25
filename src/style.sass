@@ -1602,16 +1602,6 @@ body
   opacity: 0
   font-weight: 900
   visibility: hidden
-  &::before
-    content: ""
-    position: absolute
-    top: -8px
-    right: 14px
-    width: 44px
-    height: 14px
-    background: rgba(230, 211, 163, 0.8)
-    border: 2px solid rgba(43, 29, 14, 0.2)
-    rotate: 8deg
   &::after
     content: ""
     position: absolute
@@ -1645,6 +1635,115 @@ body
     height: 100%
     object-fit: cover
     filter: sepia(0.7) contrast(1.15) brightness(0.7)
+
+.u-bg3
+  position: absolute
+  inset: 0
+  overflow: hidden
+  border-radius: inherit
+  z-index: 0
+
+.u-bg
+  position: absolute
+  inset: 0
+  width: 100%
+  height: 100%
+  object-fit: cover
+  backface-visibility: hidden
+  filter: sepia(0.7) contrast(1.1) brightness(0.8)
+
+
+.u-title
+  position: absolute
+  left: 24px
+  right: 24px
+  bottom: 36px
+  margin: 0
+  color: #f3e6c0
+  font-family: "datbox"
+  font-size: 2.4rem
+  line-height: 1.1
+  text-shadow: 3px 3px 0 #2b1d0e
+  rotate: -4deg
+  z-index: 2
+  backface-visibility: hidden
+
+.u-item
+  position: absolute
+  object-fit: cover
+  border: 5px solid #f3e6c0
+  box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5)
+  filter: sepia(0.7) contrast(1.15) brightness(0.95)
+  z-index: 1
+  opacity: 0
+  visibility: hidden
+  backface-visibility: hidden
+  &:nth-of-type(1)
+    left: 14px
+    top: 44px
+    width: 200px
+    height: 140px
+    rotate: -3deg
+  &:nth-of-type(2)
+    left: 214px
+    top: 40px
+    width: 112px
+    height: 160px
+    rotate: 4deg
+  &:nth-of-type(3)
+    left: 20px
+    top: 190px
+    width: 170px
+    height: 120px
+    rotate: 3deg
+  &:nth-of-type(4)
+    left: 210px
+    top: 204px
+    width: 121px
+    height: 104px
+    rotate: -4deg
+  &:nth-of-type(5)
+    left: 16px
+    top: 44px
+    width: 150px
+    height: 112px
+    rotate: -4deg
+  &:nth-of-type(6)
+    left: 176px
+    top: 52px
+    width: 150px
+    height: 112px
+    rotate: 3deg
+  &:nth-of-type(7)
+    left: 30px
+    top: 170px
+    width: 150px
+    height: 112px
+    rotate: -2deg
+  &:nth-of-type(8)
+    left: 170px
+    top: 176px
+    width: 150px
+    height: 112px
+    rotate: 4deg
+  &:nth-of-type(9)
+    left: 20px
+    top: 40px
+    width: 190px
+    height: 140px
+    rotate: -3deg
+  &:nth-of-type(10)
+    left: 150px
+    top: 130px
+    width: 170px
+    height: 128px
+    rotate: 3deg
+  &:nth-of-type(11)
+    left: 24px
+    top: 240px
+    width: 150px
+    height: 112px
+    rotate: -4deg
 
 @media (max-width: 768px)
   .intro

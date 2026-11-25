@@ -99,7 +99,6 @@ function scheduleNextPage() {
 
     if (locked) return;
     if (location.hash === "#dev") return;
-    if (current >= leaves.length) return;
 
     let readingTime = readingTimes[current];
     if (readingTime === undefined) {
@@ -168,10 +167,22 @@ typingIntro.to(enter, {
 });
 
 import bgmFile from "../audio/super-trouper-full.mp3";
+import bgmTwoFile from "../audio/end-of-beginning.mp3";
+
+const songs = [bgmFile, bgmTwoFile];
+let songIndex = 0;
+
 const bgm = new Audio(bgmFile);
 bgm.preload = "auto";
-bgm.loop = true;
+bgm.loop = false;
 bgm.volume = 0.4;
+
+bgm.addEventListener("ended", () => {
+    songIndex += 1;
+    if (songIndex >= songs.length) songIndex = 0;
+    bgm.src = songs[songIndex]!;
+    bgm.play().catch(console.error);
+});
 
 enter.addEventListener("click", async () => {
     bgm.play().catch((err) => console.error(err));
@@ -272,6 +283,8 @@ function updatePage() {
     if (current !== 6) gsap.set(envphotos, { autoAlpha: 0 });
     if (current === 7) playSpreadSeven();
     if (current !== 7) gsap.set([ppstamps, ppitems, ppcap], { autoAlpha: 0 });
+    if (current === 8) playSpreadEight();
+    if (current !== 8) gsap.set(eightItems, { autoAlpha: 0 });
 }
 
 function nextPage() {
@@ -379,6 +392,13 @@ function closebook() {
         autoAlpha: 1,
         duration: 1
     }, time + 1);
+    tl.to(bgm, {
+        volume: 0,
+        duration: 3,
+        onComplete: () => {
+            bgm.pause();
+        }
+    }, time);
 }
 
 // document.getElementById("nextspread")!.addEventListener("click", nextPage);
@@ -1436,6 +1456,85 @@ function playSpreadSeven() {
     }, time + 2);
 }
 
+const eightItems = gsap.utils.toArray<HTMLElement>(".u-item");
+const eight_gap = 3;
+const eight_hold = 4;
+
+function playSpreadEight() {
+    locked = true;
+    gsap.set(spread, {
+        transformOrigin: "50% 50%"
+    });
+    gsap.set(eightItems, {
+        autoAlpha: 0,
+        y: 0
+    });
+
+    const tl = gsap.timeline({
+        onComplete: () => {
+            locked = false;
+            scheduleNextPage();
+        }
+    });
+
+    tl.from(".u-title", {
+        y: -40,
+        autoAlpha: 0,
+        duration: 0.6,
+        ease: "back.out(1.4)"
+    }, 0.3);
+    tl.to(spread, {
+        scale: 1.4,
+        x: -200,
+        duration: 1.5,
+        ease: "power2.inOut",
+        onStart: lift,
+        onComplete: drop
+    }, 1);
+
+    const stops = [1, 2, 3];
+    let time = 2.5;
+
+    stops.forEach((stop, index) => {
+        const group = gsap.utils.toArray<HTMLElement>(`.u-item[data-stop="${stop}"]`);
+
+        group.forEach((item) => {
+            tl.fromTo(item, {
+                autoAlpha: 1,
+                clipPath: "inset(0% 0% 100% 0%)",
+                filter: "sepia(1) brightness(2.2) contrast(0.6)"
+            }, {
+                clipPath: "inset(0% 0% 0% 0%)",
+                filter: "sepia(0.7) contrast(1.15) brightness(0.95)",
+                duration: 1.2,
+                ease: "none"
+            }, time);
+            time += eight_gap;
+        });
+
+        const groupEnd = time + eight_hold;
+
+        if (index < stops.length - 1) {
+            tl.to(group, {
+                y: 30,
+                autoAlpha: 0,
+                duration: 0.6,
+                ease: "power2.in"
+            }, groupEnd);
+            time = groupEnd + 1.4;
+        } else {
+            tl.to(spread, {
+                scale: 1,
+                x: 0,
+                duration: 1.5,
+                ease: "power2.inOut",
+                onStart: lift,
+                onComplete: drop
+            }, groupEnd);
+        }
+    });
+}
+
 if (location.hash === "#dev") {
     typingIntro.kill();
     introScreen.remove();
@@ -1448,8 +1547,8 @@ if (location.hash === "#dev") {
     leaves[4]!.classList.add("flipped");
     leaves[5]!.classList.add("flipped");
     leaves[6]!.classList.add("flipped");
-    // leaves[7]!.classList.add("flipped");
+    leaves[7]!.classList.add("flipped");
     // leaves[8]!.classList.add("flipped");
-    current = 7;
+    current = 8;
     updatePage();
 }
