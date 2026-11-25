@@ -1183,7 +1183,81 @@ gbForm.addEventListener("submit", async (event) => {
 const ppstamps = gsap.utils.toArray<HTMLElement>(".pp-stamp");
 const ppitems = gsap.utils.toArray<HTMLElement>(".pp-item");
 const ppcap = document.querySelector(".pp-cap") as HTMLElement;
-const stop_times = [8, 8, 5, 7];
+
+function placeNote(item: HTMLElement) {
+    const photo = item.getBoundingClientRect();
+    const book = spread.getBoundingClientRect();
+    const gap = 14;
+    const photoX = photo.left + photo.width / 2;
+    const photoY = photo.top + photo.height / 2;
+
+    let text = "";
+    if (item.dataset.note !== undefined) text = item.dataset.note;
+
+    const wide = Math.min(innerWidth * 0.8, 560);
+    const narrow = Math.min(innerWidth - photo.right - gap - 16, 300);
+    const tall = Math.ceil(text.length * 10 / wide) * 22 + 40;
+
+    let side = "top";
+    let best = 99999;
+    if (photo.top - gap > tall && photo.top - book.top < best) {
+        side = "top";
+        best = photo.top - book.top;
+    }
+    if (innerHeight - photo.bottom - gap > tall && book.bottom - photo.bottom < best) {
+        side = "bottom";
+        best = book.bottom - photo.bottom;
+    }
+    if (narrow > 220 && book.right - photo.right < best) {
+        side = "right";
+    }
+    ppcap.dataset.side = side;
+
+    let maxWidth = wide;
+    if (side === "right") maxWidth = narrow;
+    gsap.set(ppcap, {
+        maxWidth: maxWidth,
+        width: "auto"
+    });
+    ppcap.textContent = text;
+    const width = ppcap.offsetWidth;
+    ppcap.textContent = "";
+    gsap.set(ppcap, {
+        width: width
+    });
+
+    if (side === "right") {
+        const noteLeft = photo.right + gap;
+        let fit = width;
+        if (noteLeft + fit > innerWidth - 16) fit = innerWidth - 16 - noteLeft;
+        gsap.set(ppcap, {
+            left: noteLeft,
+            width: fit,
+            top: photoY - 22,
+            bottom: "auto",
+            "--ty": "22px"
+        });
+        return;
+    }
+
+    const left = Math.max(16, Math.min(photoX - width / 2, innerWidth - width - 16));
+    const tx = Math.max(24, Math.min(photoX - left, width - 24));
+    gsap.set(ppcap, {
+        left: left,
+        "--tx": tx + "px"
+    });
+    if (side === "top") {
+        gsap.set(ppcap, {
+            top: "auto",
+            bottom: innerHeight - (photo.top - gap)
+        });
+    } else {
+        gsap.set(ppcap, {
+            top: photo.bottom + gap,
+            bottom: "auto"
+        });
+    }
+}
 
 function showCap(text: string) {
     ppcap.textContent = text;
@@ -1192,85 +1266,63 @@ function showCap(text: string) {
 function playSpreadSeven() {
     locked = true;
 
-    gsap.set([
-        ppstamps, 
-        ppitems, 
-        ppcap
-    ], { autoAlpha: 0 });
-    
+    gsap.set(spread, {
+        transformOrigin: "50% 50%"
+    });
+    gsap.set(ppitems, {
+        autoAlpha: 0,
+        scale: 1,
+        zIndex: 1
+    });
+
     const tl = gsap.timeline({
         onComplete: () => {
             locked = false;
             scheduleNextPage();
         }
     });
+
     const stops = [
         {
-            x: 360, 
-            y: 100, 
+            x: 360,
+            y: 100,
             scale: 1.8,
-            duration: 1.5, 
-            hold: "+=1", 
-            resetHold: "+=1" 
+            duration: 1.5
         },
-        { 
-            x: 220, 
-            y: 100, 
-            scale: 1.8, 
-            duration: 1.5, 
-            hold: "+=4", 
-            resetHold: "+=1" 
+        {
+            x: 220,
+            y: 100,
+            scale: 1.8,
+            duration: 1.5
         },
-        { 
-            x: 390, 
-            y: -100, 
-            scale: 1.8, 
-            duration: 1.5, 
-            hold: "+=3", 
-            resetHold: "+=1" 
+        {
+            x: 390,
+            y: -100,
+            scale: 1.8,
+            duration: 1.5
         },
-        { 
-            x: 220, 
-            y: -100, 
-            scale: 1.8, 
-            duration: 1, 
-            hold: "+=2", 
-            resetHold: "+=1" 
+        {
+            x: 220,
+            y: -100,
+            scale: 1.8,
+            duration: 1
         },
     ];
+
     const move7 = (vars: gsap.TweenVars, position: gsap.Position) => {
-    tl.to(
-        spread,
-        {
-        transformOrigin: "50% 50%",
-        ease: "power2.inOut",
-        onStart: lift,
-        onComplete: drop,
-        ...vars,
-        },
-        position
-    );
+        tl.to(
+            spread,
+            {
+                transformOrigin: "50% 50%",
+                ease: "power2.inOut",
+                onStart: lift,
+                onComplete: drop,
+                ...vars,
+            },
+            position
+        );
     };
-    stops.forEach((s, i) => {
-    move7({ 
-        scale: s.scale, 
-        x: s.x, 
-        y: s.y, 
-        duration: s.duration 
-    }, i === 0 ? "+=1" : s.hold);
-    move7({ 
-        scale: 1.5, 
-        x: 0, 
-        y: 0, 
-        duration: s.duration 
-    }, s.resetHold);
-    });
-    move7({ 
-        scale: 1, 
-        x: 0, 
-        y: 0, 
-        duration: 1.5 
-    }, "+=2");
+
     tl.from(".pp-title", {
         y: -40,
         autoAlpha: 0,
@@ -1280,14 +1332,18 @@ function playSpreadSeven() {
 
     let time = 1.5;
     ppstamps.forEach((stamp, i) => {
+        const s = stops[i];
+        if (s === undefined) return;
+
         const stopItems = gsap.utils.toArray<HTMLElement>(`.pp-item[data-stop="${i + 1}"]`);
+        move7({
+            scale: s.scale,
+            x: s.x,
+            y: s.y,
+            duration: s.duration
+        }, time);
 
-        let text = "";
-        if (stamp.dataset.cap !== undefined) text = stamp.dataset.cap;
-
-        let length = 7;
-        const known = stop_times[i];
-        if (known !== undefined) length = known;
+        const stampAt = time + s.duration;
         tl.fromTo(stamp, {
             scale: 2.5,
             autoAlpha: 0
@@ -1296,7 +1352,17 @@ function playSpreadSeven() {
             autoAlpha: 1,
             duration: 0.35,
             ease: "power4.in"
-        }, time);
+        }, stampAt);
+
+        const showAt = stampAt + 0.8;
+        move7({
+            scale: 1.1,
+            x: 0,
+            y: 0,
+            duration: 1
+        }, showAt);
+
+        const dropAt = showAt + 0.6;
         tl.fromTo(stopItems, {
             y: -90,
             rotation: gsap.utils.wrap([10, -10, 8]),
@@ -1308,39 +1374,66 @@ function playSpreadSeven() {
             duration: 0.6,
             ease: "back.out(1.2)",
             stagger: 0.4
-        }, time + 0.5);
+        }, dropAt);
+
         stopItems.forEach((item) => {
             if (item instanceof HTMLVideoElement) {
                 tl.call(() => {
                     item.currentTime = 0;
                     item.play().catch(() => {});
-                }, [], time + 0.5);
+                }, [], dropAt);
             }
         });
-        tl.call(showCap, [text], time + 1.8);
-        tl.to(ppcap, {
-            autoAlpha: 1,
-            duration: 0.4
-        }, time + 1.8);
+
+        let noteAt = dropAt + 0.6 + 0.4 * (stopItems.length - 1) + 0.3;
+        stopItems.forEach((item) => {
+            let text = "";
+            if (item.dataset.note !== undefined) text = item.dataset.note;
+
+            const chars = { count: 0 };
+            const typing = Math.max(text.length / TYPE_SPEED, 0.2);
+            const length = typing + 1.5;
+
+            tl.call(showCap, [""], noteAt);
+            tl.call(placeNote, [item], noteAt);
+            tl.set(ppcap, {
+                autoAlpha: 1
+            }, noteAt + 0.02);
+            tl.to(chars, {
+                count: text.length,
+                duration: typing,
+                ease: "none",
+                onUpdate: () => {
+                    ppcap.textContent = text.slice(0, Math.round(chars.count));
+                }
+            }, noteAt + 0.2);
+            tl.to(ppcap, {
+                autoAlpha: 0,
+                duration: 0.2
+            }, noteAt + length - 0.2);
+
+            noteAt += length;
+        });
+
+        const end = noteAt + 0.2;
         if (i < ppstamps.length - 1) {
             tl.to(stopItems, {
                 y: 60,
                 autoAlpha: 0,
                 duration: 0.5,
                 ease: "power2.in"
-            }, time + length - 0.5);
-            tl.to(ppcap, {
-                autoAlpha: 0,
-                duration: 0.3
-            }, time + length - 0.5);
+            }, end);
         }
 
-        time += length;
+        time = end + 0.8;
     });
 
-    tl.to({}, {
-        duration: 3
-    }, time);
+    move7({
+        scale: 1,
+        x: 0,
+        y: 0,
+        duration: 1.5
+    }, time + 2);
 }
 
 if (location.hash === "#dev") {

@@ -1451,7 +1451,6 @@ body
   letter-spacing: 1px
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.45)
   mask-image: radial-gradient(circle, black 68%, rgba(0, 0, 0, 0.82) 100%)
-  cursor: pointer
   transition: transform 0.2s ease-out
   opacity: 0
   visibility: hidden
@@ -1586,31 +1585,55 @@ body
 
 .pp-cap
   position: absolute
-  left: 26px
-  right: 26px
-  bottom: 20px
+  right: auto
+  bottom: auto
   margin: 0
-  padding: 8px 10px
+  padding: 8px 12px 10px
+  font-size: 1rem
+  box-sizing: border-box
   background: #f3e6c0
   color: #2b1d0e
   font-family: "datbox"
-  font-size: 0.8rem
-  line-height: 1.35
+  line-height: 1.45
+  letter-spacing: 0.03em
   box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.4)
   rotate: -1deg
+  z-index: 6
   opacity: 0
-  font-weight:900
+  font-weight: 900
   visibility: hidden
   &::before
     content: ""
     position: absolute
     top: -8px
-    left: 50%
+    right: 14px
     width: 44px
     height: 14px
-    translate: -50% 0
     background: rgba(230, 211, 163, 0.8)
     border: 2px solid rgba(43, 29, 14, 0.2)
+    rotate: 8deg
+  &::after
+    content: ""
+    position: absolute
+    border: 9px solid transparent
+  &[data-side="top"]::after
+    top: 100%
+    left: var(--tx)
+    translate: -50% 0
+    border-top: 12px solid #f3e6c0
+    border-bottom: 0
+  &[data-side="bottom"]::after
+    bottom: 100%
+    left: var(--tx)
+    translate: -50% 0
+    border-bottom: 12px solid #f3e6c0
+    border-top: 0
+  &[data-side="right"]::after
+    right: 100%
+    top: var(--ty)
+    translate: 0 -50%
+    border-right: 12px solid #f3e6c0
+    border-left: 0
   
 .day3-bg
   position: absolute
