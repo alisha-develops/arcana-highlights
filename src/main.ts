@@ -9,15 +9,15 @@ let current = 0;
 let locked = true;
 
 const readingTimes: Record<number, number> = {
-    1: 800,
+    1: 500,
     2: 1000,
     3: 300,
     4: 500,
-    5: 1000,
-    6: 3000,
-    7: 1000,
-    8: 1000,
-    9: 3000,
+    5: 500,
+    6: 800,
+    7: 300,
+    8: 300,
+    9: 1500,
 };
 
 let autoTurn!: gsap.core.Tween;
@@ -99,6 +99,10 @@ function scheduleNextPage() {
 
     if (locked) return;
     if (location.hash === "#dev") return;
+    if (voiceChainActive) {
+        voiceWaiter = scheduleNextPage;
+        return;
+    }
 
     let readingTime = readingTimes[current];
     if (readingTime === undefined) {
@@ -413,15 +417,63 @@ function syncVideos() {
 
 
 import voiceFile from "../audio/layover-doha.mp3";
-import changiairport1 from "../audio/changiairport1.mp3";
-import elevator2 from "../audio/elevator2.mp3";
-import yapkhi from "../audio/yapboutkhi.mp3";
-import topup from "../audio/topupmachine.mp3";
-import outside from "../audio/outoftheairport.mp3";
-import sky from "../audio/sky.mp3";
-import ingrab2 from "../audio/ingrab1.mp3";
-import toVenueFile from "../audio/to-venue.mp3";
-import day1 from "../audio/day1.mp3";
+import nightVoiceFile from "../audio/spread3-1.mp3";
+import toVenueFile from "../audio/spread3-2.mp3";
+import day1 from "../audio/spread4-1.mp3";
+import spread7Vo from "../audio/spread7-1.mp3";
+import spread8Vo from "../audio/spread8-1.mp3";
+import spread9Vo1 from "../audio/spread9-1.mp3";
+import spread9Vo2 from "../audio/spread9-last.mp3";
+
+const spreadVoices: Record<number, HTMLAudioElement[]> = {
+    7: [new Audio(spread7Vo)],
+    8: [new Audio(spread8Vo)],
+    9: [new Audio(spread9Vo1), new Audio(spread9Vo2)],
+};
+const allSpreadVoices = Object.values(spreadVoices).flat();
+allSpreadVoices.forEach((a) => (a.preload = "auto"));
+
+let voiceSpread = -1;
+let voiceChainActive = false;
+let voiceWaiter = () => {};
+
+function finishVoiceChain() {
+    if (!voiceChainActive) return;
+    voiceChainActive = false;
+    duck(false);
+
+    const waiter = voiceWaiter;
+    voiceWaiter = () => {};
+    waiter();
+}
+
+function stopSpreadVoices() {
+    voiceWaiter = () => {};
+    allSpreadVoices.forEach((a) => {
+        a.onended = null;
+        a.pause();
+        a.currentTime = 0;
+    });
+    finishVoiceChain();
+}
+
+function playSpreadVoices(n: number) {
+    const clips = spreadVoices[n];
+    if (!clips) return;
+
+    voiceChainActive = true;
+    duck(true);
+
+    clips.forEach((clip, i) => {
+        const next = clips[i + 1];
+        if (next === undefined) {
+            clip.onended = finishVoiceChain;
+        } else {
+            clip.onended = () => next.play().catch(finishVoiceChain);
+        }
+    });
+    clips[0]!.play().catch(finishVoiceChain);
+}
 
 const dayOneVoice = new Audio(day1);
 dayOneVoice.preload = "auto";
@@ -432,7 +484,7 @@ toVenueVoice.preload = "auto";
 toVenueVoice.volume = 1;
 
 const NIGHT_VOICE_VOL = 1;
-const nightClips = [changiairport1, elevator2, yapkhi, topup, outside, sky, ingrab2].map((src) => {
+const nightClips = [nightVoiceFile].map((src) => {
     const a = new Audio(src);
     a.preload = "auto";
     a.volume = NIGHT_VOICE_VOL;
@@ -499,6 +551,12 @@ function syncVoice() {
     } else {
         dayOneVoice.pause();
         dayOneVoice.currentTime = 0;
+    }
+
+    if (current !== voiceSpread) {
+        stopSpreadVoices();
+        voiceSpread = current;
+        if (current !== 7) playSpreadVoices(current);
     }
 }
 const HALF = PAGE_WIDTH/2
@@ -580,13 +638,16 @@ function popPhoto(photo: HTMLImageElement, seconds: number) {
         .set(tile, { opacity: 1 }, seconds)
         .set(pop, { display: "none" }, seconds);
 }
-
 function playSpreadFour() {
     locked = true;
     gsap.set(spread, { transformOrigin: "50% 50%" });
 
+    let length = 35;
+    if (Number.isFinite(dayOneVoice.duration)) length = dayOneVoice.duration;
+    const k = length / 44;
+
     const subsTl = gsap.timeline();
-    addSubtitles(subsTl, fourLines, 44);
+    addSubtitles(subsTl, fourLines, 44, k);
 
     const crew = document.querySelector(".friends-group-one img") as HTMLImageElement;
     const all = document.querySelector(".friends-group-two img") as HTMLImageElement;
@@ -602,52 +663,53 @@ function playSpreadFour() {
         }
     });
 
-        spreadFourTl
+    spreadFourTl
         .to(spread, { 
             scale: 1.8, 
             x: 370, 
             y: 100, 
-            duration: 2 
+            duration: 2 * k 
         })
         .to(spread, { 
             y: 40, 
-            duration: 3 
+            duration: 3 * k 
         })
-        .call(popPhoto, [crew, 5])
+        .call(popPhoto, [crew, 5 * k])
         .to(spread, { 
             y: -40, 
-            duration: 3 
-        }, "+=5") 
-        .call(popPhoto, [all, 6])
+            duration: 3 * k 
+        }, "+=" + 5 * k)
+        .call(popPhoto, [all, 6 * k])
         .to(spread, { 
             y: -100, 
-            duration: 3 
-        }, "+=6") 
+            duration: 3 * k 
+        }, "+=" + 6 * k)
         .to(spread, { 
             x: -270, 
             y: 100, 
-            duration: 3 
-        }) 
+            duration: 3 * k 
+        })
         .to(spread, { 
             y: 50, 
-            duration: 3 
+            duration: 3 * k 
         })
-        .call(popPhoto, [me, 3])
+        .call(popPhoto, [me, 3 * k])
         .to(spread, { 
             y: 0, 
-            duration: 2 
-        }, "+=3")
-        .call(popPhoto, [sandwich, 4])
+            duration: 2 * k 
+        }, "+=" + 3 * k)
+        .call(popPhoto, [sandwich, 4 * k])
         .to(spread, { 
             y: -50, 
-            duration: 2 
-        }, "+=4")
-        .call(popPhoto, [lego, 3])
+            duration: 2 * k 
+        }, "+=" + 4 * k)
+        .call(popPhoto, [lego, 3 * k])
         .to(spread, { 
             scale: 1, 
-            x: 0, y: 0, 
-            duration: 2 
-        }, "+=3");
+            x: 0, 
+            y: 0, 
+            duration: 2 * k 
+        }, "+=" + 3 * k);
 }
 
 function preloadNextVideos() {
@@ -662,15 +724,15 @@ function preloadNextVideos() {
 const spreadSubs = document.querySelector<HTMLElement>(".spread-subs")!;
 const TYPE_SPEED = 35;
 
-function addSubtitles(tl: gsap.core.Timeline, lines: string[], end: number) {
+function addSubtitles(tl: gsap.core.Timeline, lines: string[], end: number, k = 1) {
     lines.forEach((line, i) => {
-        const start = Number(line.slice(0, line.indexOf(":")));
+        const start = Number(line.slice(0, line.indexOf(":"))) * k;
         const text = line.slice(line.indexOf(":") + 1).trim();
 
-        let stop = end;
+        let stop = end * k;
         const next = lines[i + 1];
         if (next !== undefined) {
-            stop = Number(next.slice(0, next.indexOf(":")));
+            stop = Number(next.slice(0, next.indexOf(":"))) * k;
         }
         const typing = Math.max(Math.min(text.length / TYPE_SPEED, stop - start - 0.3), 0.2);
         const chars = { count: 0 };
@@ -719,8 +781,38 @@ const nightTiming = [
     { lead: 0.2, tail: 0.3 }, 
     { lead: 0.2, tail: 0.5 },
 ];
-const nightLengths = [14, 13, 11, 10, 8, 4, 12];
 
+const nightCues = [0.92, 6.93, 15.75, 21.66, 27.99, 33.15, 38.02];
+const nightSpeechEnds = [6.54, 15.58, 21.07, 27.54, 32.87, 37.73, 48.58];
+const NIGHT_END = 49;
+
+let nightLengths: number[] = [];
+let nightLeads: number[] = [];
+let nightTalks: number[] = [];
+function computeNightLengths() {
+    nightLeads = [];
+    nightLengths = [];
+    nightTalks = [];
+
+    const starts: number[] = [];
+    for (let i = 0; i < nightCues.length; i++) {
+        let lead = 0.2;
+        const timing = nightTiming[i];
+        if (timing !== undefined) lead = timing.lead;
+        if (i === 0) lead = nightCues[0]!;
+
+        nightLeads.push(lead);
+        starts.push(nightCues[i]! - lead);
+    }
+
+    for (let i = 0; i < nightCues.length; i++) {
+        let nextStart = NIGHT_END;
+        if (i < nightCues.length - 1) nextStart = starts[i + 1]!;
+
+        nightLengths.push(nextStart - starts[i]! - 0.3);
+        nightTalks.push((nightSpeechEnds[i]! - nightCues[i]!) * 0.95);
+    }
+}
 
 function playNightSlideshow() {
     if (nightRunning) return;
@@ -728,6 +820,7 @@ function playNightSlideshow() {
 
     locked = true;
     duck(true);
+    computeNightLengths();
 
     gsap.set(nightImages, { autoAlpha: 0 });
     gsap.set(nightSubs, { autoAlpha: 1 });
@@ -763,14 +856,9 @@ function playNightSlideshow() {
         const cap = nightCaptions[index];
         if (cap !== undefined) caption = cap;
 
-        let lead = 0;
-        let tail = 0.1;
-        const timing = nightTiming[index];
-
-        if (timing !== undefined) {
-            lead = timing.lead;
-            tail = timing.tail;
-        }
+        let lead = 0.2;
+        const savedLead = nightLeads[index];
+        if (savedLead !== undefined) lead = savedLead;
 
         const clip = nightClips[index];
         let clipLength = 10;
@@ -779,7 +867,10 @@ function playNightSlideshow() {
         if (known !== undefined) clipLength = known;
 
         const chars = { count: 0 };
-        const talk = Math.max((clipLength - lead - tail) * 0.85, 0.5);
+        let talk = 1;
+        const savedTalk = nightTalks[index];
+        if (savedTalk !== undefined) talk = savedTalk;
+        if (talk < 0.5) talk = 0.5;
         const rest = Math.max(clipLength - lead - talk - 0.2, 0) + 0.3;
 
         tl.call(() => {
@@ -871,12 +962,15 @@ function playNightSlideshow() {
         onStart: lift,
         onComplete: drop
     });
-    tl.to({}, { duration: 2.5 });
+    
+    let venueDur = 12;
+    if (Number.isFinite(toVenueVoice.duration)) venueDur = toVenueVoice.duration;
+    tl.to({}, { duration: Math.max(venueDur - 6.5 - 0.5, 0.3) });
     tl.to(spread, {
         scale: 1,
         x: 0,
         y: 0,
-        duration: 3,
+        duration: 1.8,
         ease: "power2.inOut",
         transformOrigin: "50% 50%",
         onStart: lift,
@@ -887,7 +981,7 @@ function playNightSlideshow() {
 let resumeList: HTMLAudioElement[] = [];
 
 document.addEventListener("visibilitychange", () => {
-    const sounds = [introSfx, voice, dayOneVoice, toVenueVoice, ...nightClips, bgm];
+    const sounds = [introSfx, voice, dayOneVoice, toVenueVoice, ...nightClips, ...allSpreadVoices, bgm];
 
     if (document.hidden) {
         resumeList = sounds.filter((a) => !a.paused);
@@ -1028,7 +1122,7 @@ function playSpreadFive() {
     });
     tl.to({}, { 
         duration: 0.1 
-    }, time);
+    }, time - 0.4);
 }
 
 const envparts = gsap.utils.toArray<HTMLElement>(".env-back, .env-front");
@@ -1037,7 +1131,7 @@ const daysub = document.querySelector(".day-sub") as HTMLElement;
 const day2title = document.querySelector(".day2-title") as HTMLElement;
 const night2title = document.querySelector(".night2-title") as HTMLElement;
 const night2bg = document.querySelector(".night2-bg") as HTMLElement;
-const hold = 4;
+const hold = 1.8;
 
 function showSub(text: string) {
     daysub.textContent = text;
@@ -1139,27 +1233,27 @@ function playSpreadSix() {
         tl.to(photo, {
             y: -75,
             scale: 1,
-            duration: 0.8,
+            duration: 0.5,
             ease: "power2.inOut"
         }, back);
         tl.to(envparts, {
             scale: 1,
             y: 0,
-            duration: 0.8,
+            duration: 0.5,
             ease: "power2.inOut"
         }, back);
         tl.set(photo, {
             zIndex: 2
-        }, back + 0.8);
+        }, back + 0.5);
         tl.to(photo, {
             y: 0,
-            duration: 0.6,
+            duration: 0.4,
             ease: "power2.in"
-        }, back + 0.8);
+        }, back + 0.5);
         tl.set(photo, {
             autoAlpha: 0
-        }, back + 1.4);
-        time = back + 1.6;
+        }, back + 0.9);
+        time = back + 0.9;
     });
 
     tl.to({}, {
@@ -1283,6 +1377,8 @@ function showCap(text: string) {
     ppcap.textContent = text;
 }
 
+const stamp_zoom= true;
+
 function playSpreadSeven() {
     locked = true;
 
@@ -1356,14 +1452,17 @@ function playSpreadSeven() {
         if (s === undefined) return;
 
         const stopItems = gsap.utils.toArray<HTMLElement>(`.pp-item[data-stop="${i + 1}"]`);
-        move7({
-            scale: s.scale,
-            x: s.x,
-            y: s.y,
-            duration: s.duration
-        }, time);
-
-        const stampAt = time + s.duration;
+        let stampAt = time;
+        if (stamp_zoom) {
+            const zoomTime = s.duration * 0.7;
+            move7({
+                scale: s.scale,
+                x: s.x,
+                y: s.y,
+                duration: zoomTime
+            }, time);
+            stampAt = time + zoomTime;
+        }
         tl.fromTo(stamp, {
             scale: 2.5,
             autoAlpha: 0
@@ -1374,15 +1473,15 @@ function playSpreadSeven() {
             ease: "power4.in"
         }, stampAt);
 
-        const showAt = stampAt + 0.8;
+        const showAt = stampAt + 0.4;
         move7({
             scale: 1.1,
             x: 0,
             y: 0,
-            duration: 1
+            duration: 0.8
         }, showAt);
 
-        const dropAt = showAt + 0.6;
+        const dropAt = showAt + 0.3;
         tl.fromTo(stopItems, {
             y: -90,
             rotation: gsap.utils.wrap([10, -10, 8]),
@@ -1395,6 +1494,11 @@ function playSpreadSeven() {
             ease: "back.out(1.2)",
             stagger: 0.4
         }, dropAt);
+
+        if (i === 1) {
+            const dropTotal = 0.6 + 0.4 * (stopItems.length - 1);
+            tl.call(() => playSpreadVoices(7), [], dropAt + dropTotal / 2);
+        }
 
         stopItems.forEach((item) => {
             if (item instanceof HTMLVideoElement) {
@@ -1445,15 +1549,15 @@ function playSpreadSeven() {
             }, end);
         }
 
-        time = end + 0.8;
+        time = end + 0.3;
     });
 
     move7({
         scale: 1,
         x: 0,
         y: 0,
-        duration: 1.5
-    }, time + 2);
+        duration: 1
+    }, time);
 }
 
 const eightItems = gsap.utils.toArray<HTMLElement>(".u-item");
@@ -1495,6 +1599,15 @@ function playSpreadEight() {
     const stops = [1, 2, 3];
     let time = 2.5;
 
+    const voiceDur = spreadVoices[8]![0]!.duration;
+    let target = 65;
+    if (Number.isFinite(voiceDur)) target = voiceDur;
+    const fixed = 2.5 + 1.4 * (stops.length - 1) + 1.5;
+    const flexible = (eight_gap * eightItems.length) + (eight_hold * stops.length);
+    const stretch = Math.max(0.4, (target - fixed) / flexible);
+    const gap = eight_gap * stretch;
+    const holdTime = eight_hold * stretch;
+
     stops.forEach((stop, index) => {
         const group = gsap.utils.toArray<HTMLElement>(`.u-item[data-stop="${stop}"]`);
 
@@ -1509,10 +1622,10 @@ function playSpreadEight() {
                 duration: 1.2,
                 ease: "none"
             }, time);
-            time += eight_gap;
+            time += gap;
         });
 
-        const groupEnd = time + eight_hold;
+        const groupEnd = time + holdTime;
 
         if (index < stops.length - 1) {
             tl.to(group, {
@@ -1533,6 +1646,10 @@ function playSpreadEight() {
             }, groupEnd);
         }
     });
+
+    if (tl.duration() > target + 0.5) {
+        tl.timeScale(Math.min(tl.duration() / target, 1.5));
+    }
 }
 
 if (location.hash === "#dev") {
@@ -1543,12 +1660,12 @@ if (location.hash === "#dev") {
 
     leaves[1]!.classList.add("flipped");
     leaves[2]!.classList.add("flipped");
-    leaves[3]!.classList.add("flipped");
-    leaves[4]!.classList.add("flipped");
-    leaves[5]!.classList.add("flipped");
-    leaves[6]!.classList.add("flipped");
-    leaves[7]!.classList.add("flipped");
-    leaves[8]!.classList.add("flipped");
-    current = 9;
+    // leaves[3]!.classList.add("flipped");
+    // leaves[4]!.classList.add("flipped");
+    // leaves[5]!.classList.add("flipped");
+    // leaves[6]!.classList.add("flipped");
+    // leaves[7]!.classList.add("flipped");
+    // leaves[8]!.classList.add("flipped");
+    current = 3;
     updatePage();
 }
