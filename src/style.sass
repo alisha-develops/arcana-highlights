@@ -152,7 +152,8 @@ body
     transform: rotateY(-180deg)
     z-index: var(--i)
   &.turning
-    z-index: 100 
+    z-index: calc(100 + var(--total) - var(--i))
+    will-change: transform
     will-change: transform
 
 .face
@@ -299,6 +300,7 @@ body
   padding: 5px 2px 2px
   font-family: "datbox"
   font-size: 0.85rem
+  font-weight: 900
   line-height: 1.1
   text-align: center
 
@@ -1744,6 +1746,164 @@ body
     width: 150px
     height: 112px
     rotate: -4deg
+
+.last-left, .last-right
+  position: absolute
+  inset: 0
+  overflow: hidden
+  border-radius: inherit
+
+.last-title
+  position: absolute
+  top: 12px
+  left: 0
+  right: 0
+  margin: 0
+  z-index: 5
+  text-align: center
+  font-family: "datbox"
+  font-size: 1.5rem
+  color: #2b1d0e
+  rotate: -2deg
+  text-shadow: 1px 1px 0 #f3e6c0, -1px -1px 0 #f3e6c0
+  &.light
+    color: #f3e6c0
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9)
+
+.last-photo
+  position: absolute
+  display: flex
+  flex-direction: column
+  z-index: 3
+  img
+    flex: 1 1 0
+    min-height: 0
+    height: auto
+    filter: sepia(0.7) contrast(1.15) brightness(0.95)
+
+.ll-1
+  left: 14px
+  top: 62px
+  width: 150px
+  height: 118px
+  rotate: -3deg
+
+.ll-2
+  left: 180px
+  top: 66px
+  width: 150px
+  height: 118px
+  rotate: 3deg
+
+.ll-3
+  left: 16px
+  top: 204px
+  width: 150px
+  height: 150px
+  rotate: -2deg
+
+.ll-4
+  left: 174px
+  top: 198px
+  width: 162px
+  height: 170px
+  rotate: 3deg
+
+.last-stamp-j8
+  @extend .departure-stamp
+  left: 112px
+  bottom: 8px
+  width: 70px
+  height: 70px
+  font-size: 0.65rem
+  font-weight: 900
+  rotate: 10deg
+
+.last-bg
+  position: absolute
+  inset: 0
+  overflow: hidden
+  border-radius: inherit
+  img
+    width: 100%
+    height: 100%
+    object-fit: cover
+    filter: sepia(0.7) contrast(1.15) brightness(0.6)
+  &::after
+    content: ""
+    position: absolute
+    inset: 0
+    background: linear-gradient(to left, transparent 85%, rgba(43, 29, 14, 0.45))
+
+.lr-1
+  left: 12px
+  top: 46px
+  width: 158px
+  height: 104px
+  rotate: -3deg
+
+.lr-2
+  left: 178px
+  top: 50px
+  width: 158px
+  height: 104px
+  rotate: 3deg
+
+.lr-3
+  left: 14px
+  top: 154px
+  width: 158px
+  height: 104px
+  rotate: 2deg
+
+.lr-4
+  left: 176px
+  top: 158px
+  width: 160px
+  height: 104px
+  rotate: -3deg
+
+.home-stamp
+  @extend .arrival-stamp
+  top: 222px
+  left: auto
+  right: 20px
+  width: 92px
+  height: 92px
+  z-index: 6
+  rotate: -12deg
+  opacity: 0
+  visibility: hidden
+
+.home-ticket
+  top: auto
+  right: auto
+  left: 20px
+  bottom: 22px
+  width: 306px
+  z-index: 4
+  rotate: -2deg
+  border: none
+  background: none
+  filter: drop-shadow(2px 3px 0 rgba(43, 29, 14, 0.35))
+  .ticket-main
+    padding: 6px 12px 8px
+    background: #f3e6c0
+    border: 3px solid #2b1d0e
+    border-right: none
+  .route
+    margin: 3px 0 0
+  .code
+    font-size: 1.2rem
+  .ticket-stub
+    width: 20%
+    padding: 8px
+    background: #f3e6c0
+    border: 3px solid #2b1d0e
+    border-left: 2px dashed #2b1d0e
+    transform-origin: 0% 0%
+  .barcode
+    min-height: 46px
 
 @media (max-width: 768px)
   .intro
