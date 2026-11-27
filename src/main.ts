@@ -410,13 +410,13 @@ function closebook() {
         autoAlpha: 1,
         duration: 1
     }, time + 1);
-    tl.to(bgm, {
-        volume: 0,
-        duration: 3,
-        onComplete: () => {
-            bgm.pause();
-        }
-    }, time);
+    // tl.to(bgm, {
+    //     volume: 0,
+    //     duration: 3,
+    //     onComplete: () => {
+    //         bgm.pause();
+    //     }
+    // }, time);
 }
 
 // document.getElementById("nextspread")!.addEventListener("click", nextPage);
