@@ -14,6 +14,37 @@ $spine-shadow-left: linear-gradient(to right, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18
 $spine-shadow-right: linear-gradient(to left, rgba(0,0,0,0) 88%, rgba(0,0,0,0.18) 100%)
 $page-texture: url("https://www.transparenttextures.com/patterns/natural-paper.png")
 
+.small-screen
+  position: fixed
+  inset: 0
+  z-index: 9999
+  display: grid
+  place-content: center
+  justify-items: center
+  gap: 1.5rem
+  padding: 2rem
+  text-align: center
+  background: $pg-color
+  color: $test-color
+  p
+    max-width: 22ch
+    margin: 0
+    font-size: 1.25rem
+    line-height: 1.4
+  button
+    padding: 0.6rem 1.2rem
+    font: inherit
+    font-size: 0.95rem
+    color: $test-color
+    background: transparent
+    border: 1.5px solid $pg-border-color
+    cursor: pointer
+    &:hover
+      background: $test-color
+      color: $pg-color
+  @media (min-width: 900px)
+    display: none
+
 html, body
   overflow: hidden
 
