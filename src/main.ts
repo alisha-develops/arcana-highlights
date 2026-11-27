@@ -1878,20 +1878,20 @@ document.getElementById("continue")?.addEventListener("click", () => {
     document.querySelector(".small-screen")?.remove();
 });
 
-if (location.hash === "#dev") {
-    typingIntro.kill();
-    introScreen.remove();
-    gsap.set(spread, { visibility: "visible" });
-    intro.progress(1, false);
+// if (location.hash === "#dev") {
+//     typingIntro.kill();
+//     introScreen.remove();
+//     gsap.set(spread, { visibility: "visible" });
+//     intro.progress(1, false);
 
-    leaves[1]!.classList.add("flipped");
-    leaves[2]!.classList.add("flipped");
-    leaves[3]!.classList.add("flipped");
-    leaves[4]!.classList.add("flipped");
-    leaves[5]!.classList.add("flipped");
-    leaves[6]!.classList.add("flipped");
-    leaves[7]!.classList.add("flipped");
-    leaves[8]!.classList.add("flipped");
-    current = 9;
-    updatePage();
-}
+//     leaves[1]!.classList.add("flipped");
+//     leaves[2]!.classList.add("flipped");
+//     leaves[3]!.classList.add("flipped");
+//     leaves[4]!.classList.add("flipped");
+//     leaves[5]!.classList.add("flipped");
+//     leaves[6]!.classList.add("flipped");
+//     leaves[7]!.classList.add("flipped");
+//     leaves[8]!.classList.add("flipped");
+//     current = 9;
+//     updatePage();
+// }
