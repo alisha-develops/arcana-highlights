@@ -1,3 +1,5 @@
+[IMPORTANT: A NOTE FOR EMBASSY REVIEWERS](#embassy-reviewer-note)
+
 # arcana highlights & why?
 
 > **heads up:** this is a self playing book (automatically) that runs for about **8 minutes**, with sound on. it turns its own pages, so you can just sit back and prolly grab a drink, turn your volume up, and use a bigger screen for the best view :D
@@ -62,3 +64,27 @@ i used claude while building some parts of this, especially took help with popup
  
 it's built for a landscape screen. on small phones it falls back to a smaller book and bottom subtitles, but it's best on a laptop! also i might add "you're currently on x spread" with a timeline and a dashboard of everyone's comments at the end!
  
+# embassy reviewer note!
+
+hackatime was also tracking files from unrelated projects, potentially inflating the recorded time. ive discussed this with the org and got it fixed from fraud squad. the files in my repo are part of this project only! so please disregard unrelated files in the hackatime logs.
+
+**actual time spent on this project: 50h 44m 5s (as of 28 nov 2026 4:46am pakistan time) out of which i shipped 50h 38m to embassy** any time beyond this is inflated due to the tracking issue
+
+<details>
+  <summary>view supporting ss</summary>
+
+  <table>
+    <tr>
+      <th>project file structure</th>
+      <th>hackatime dashboard</th>
+    </tr>
+    <tr>
+      <td>
+        <img src="https://res.cloudinary.com/rnrpiqkl/image/upload/v1795822861/file_structure_for_arcana_highlights.jpg" width="100%">
+      </td>
+      <td>
+        <img src="https://res.cloudinary.com/rnrpiqkl/image/upload/v1795822861/hackatime_stats_for_arcana_highlights.jpg" width="100%">
+      </td>
+    </tr>
+  </table>
+</details>
