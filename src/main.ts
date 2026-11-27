@@ -465,6 +465,7 @@ function finishVoiceChain() {
 }
 
 function stopSpreadVoices() {
+    footerOn();
     if (hasVoiceSubs) {
         voiceSubsTl.kill();
         hasVoiceSubs = false;
@@ -496,6 +497,7 @@ function playSpreadVoices(n: number) {
     });
     const sections = voiceLines[n];
     if (sections !== undefined) {
+        footerOff();
         const subsTl = gsap.timeline();
         voiceSubsTl = subsTl;
         hasVoiceSubs = true;
@@ -504,12 +506,14 @@ function playSpreadVoices(n: number) {
             const lines = sections[i];
             if (lines === undefined) return;
             const length = clipLength(clip, lines);
-            voiceSubs(subsTl, lines, length, offset);
+            if (n === 9) timedSubs(subsTl, lines, offset);
+            else voiceSubs(subsTl, lines, length, offset);
             offset += length;
         });
         subsTl.set(spreadSubs, {
             autoAlpha: 0
         }, offset);
+        subsTl.call(footerOn, [], offset);
     }
     clips[0]!.play().catch(finishVoiceChain);
     
@@ -695,11 +699,13 @@ function playSpreadFour() {
     if (Number.isFinite(dayOneVoice.duration)) length = dayOneVoice.duration;
     const k = length / 44;
 
+    footerOff();
     const subsTl = gsap.timeline();
     voiceSubs(subsTl, fourLines, length);
     subsTl.set(spreadSubs, {
-    autoAlpha: 0
+        autoAlpha: 0
     }, length);
+    subsTl.call(footerOn, [], length);
 
     const crew = document.querySelector(".friends-group-one img") as HTMLImageElement;
     const all = document.querySelector(".friends-group-two img") as HTMLImageElement;
@@ -783,6 +789,37 @@ function clipLength(clip: HTMLAudioElement, lines: string[]) {
         chars += line.length;
     });
     return chars / 15;
+}
+
+function footerOff() {
+    document.body.classList.add("subs-on");
+}
+
+function footerOn() {
+    document.body.classList.remove("subs-on");
+}
+
+function timedSubs(tl: gsap.core.Timeline, rows: string[], offset: number) {
+    rows.forEach((row) => {
+        const match = row.match(/^([\d.]+):\s*(.*)$/);
+        if (match === null) return;
+
+        const start = offset + Number(match[1]);
+        const text = match[2]!;
+        const chars = { count: 0 };
+
+        tl.set(spreadSubs, {
+            autoAlpha: 1
+        }, start);
+        tl.to(chars, {
+            count: text.length,
+            duration: 0.4,
+            ease: "none",
+            onUpdate: () => {
+                spreadSubs.textContent = text.slice(0, Math.round(chars.count));
+            }
+        }, start);
+    });
 }
 
 function voiceSubs(tl: gsap.core.Timeline, lines: string[], duration: number, offset = 0) {

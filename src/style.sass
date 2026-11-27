@@ -1110,32 +1110,35 @@ body
 
 .spread-subs
   position: fixed
-  top: auto
-  right: auto
-  left: 0
-  translate: none
-  width: 100%
-  background: linear-gradient(to top, rgba(20, 12, 4, 0.92) 45%, rgba(20, 12, 4, 0))
-  bottom: 0
-  height: auto
+  bottom: 14px
+  left: 50%
+  translate: -50% 0
+  width: max-content
+  max-width: min(92vw, 640px)
   box-sizing: border-box
-  margin: 0
-  padding: 80px max(24px, 8vw) 46px
-  border: 0
-  box-shadow: none
-  color: #f3e6c0
+  padding: 9px 20px 10px
   font-family: "datbox"
-  font-size: 1.4rem
-  line-height: 1.5
-  letter-spacing: 0.05em
+  font-size: 18px
+  font-weight: 500
+  letter-spacing: 0.05rem
+  line-height: 1.4
   text-align: center
-  text-shadow: 2px 2px 0 #2b1d0e, -1px -1px 0 #2b1d0e, 1px -1px 0 #2b1d0e, -1px 1px 0 #2b1d0e
-  z-index: 55
+  color: #f1dfa6
+  background: rgba(18, 10, 3, 0.932)
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5)
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8)
+  z-index: 1000
   pointer-events: none
   &:empty
     display: none
-  
+  @media (max-width: 480px)
+    font-size: 13px
+    padding: 7px 14px 8px
 
+body.subs-on .footer
+  opacity: 0
+  visibility: hidden
+  
 .half
   position: absolute
   inset: 0
