@@ -440,28 +440,6 @@ body
     transparent 5px 8px
   )
 
-.page-indicators
-  position: absolute
-  top: calc(100% + 12px)
-  left: 0
-  width: 100%
-  display: flex
-  justify-content: space-between
-  padding: 0 22px
-  box-sizing: border-box
-  pointer-events: none
-  z-index: 100
-
-.page-indicator
-  font-family: 'datbox'
-  font-size: 0.8rem
-  color: #e4cc84
-  opacity: 0
-  transition: opacity 0.3s ease
-
-  &.visible
-    opacity: 1
-
 .reel-page
   display: flex
   flex-direction: column
@@ -936,20 +914,6 @@ body
   grid-template-rows: 26px repeat(2, 1fr)
   gap: 10px
   padding-bottom: 28px
-
-.scrap.friends
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent 0 21px,
-    rgba(104, 90, 47, 0.18) 21px 22px
-  )
-
-.scrap.moments
-  background-image: radial-gradient(
-    rgba(104, 90, 47, 0.35) 1px,
-    transparent 1.5px
-  )
-  background-size: 16px 16px
 
 .friends-title, .moments-title
   grid-column: 1 / -1
@@ -1973,8 +1937,6 @@ body.subs-on .footer
   .guestbook
     width: 92vw
     max-width: 320px
-  .page-indicator
-    font-size: 0.65rem
 
 @media (max-height: 520px)
   .spread-subs

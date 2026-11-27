@@ -1883,11 +1883,11 @@ if (location.hash === "#dev") {
     leaves[1]!.classList.add("flipped");
     leaves[2]!.classList.add("flipped");
     leaves[3]!.classList.add("flipped");
-    leaves[4]!.classList.add("flipped");
-    leaves[5]!.classList.add("flipped");
-    // leaves[6]!.classList.add("flipped");
-    // leaves[7]!.classList.add("flipped");
-    // leaves[8]!.classList.add("flipped");
-    current = 6;
+    // leaves[4]!.classList.add("flipped");
+    // leaves[5]!.classList.add("flipped");
+    // // leaves[6]!.classList.add("flipped");
+    // // leaves[7]!.classList.add("flipped");
+    // // leaves[8]!.classList.add("flipped");
+    current = 4;
     updatePage();
 }
