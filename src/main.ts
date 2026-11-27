@@ -289,6 +289,8 @@ function updatePage() {
     if (current !== 7) gsap.set([ppstamps, ppitems, ppcap], { autoAlpha: 0 });
     if (current === 8) playSpreadEight();
     if (current !== 8) gsap.set(eightItems, { autoAlpha: 0 });
+    if (current === 9) playSpreadNine();
+    if (current !== 9) gsap.set(lastStamp, { autoAlpha: 0 });
 }
 
 function nextPage() {
@@ -358,6 +360,18 @@ function closebook() {
     if (bookclosed) return;
     bookclosed = true;
     locked = true;
+    
+    if (hasSpreadNine) {
+        spreadNineTl.kill();
+        hasSpreadNine = false;
+    }
+    gsap.to(spread, { 
+        scale: 1, 
+        x: 0, 
+        y: 0, 
+        duration: 0.6, 
+        ease: "power2.inOut" 
+    });
 
     if (hasAutoTurn) {
         autoTurn.kill();
@@ -433,7 +447,10 @@ const spreadVoices: Record<number, HTMLAudioElement[]> = {
 const allSpreadVoices = Object.values(spreadVoices).flat();
 allSpreadVoices.forEach((a) => (a.preload = "auto"));
 
+const BOOK_CLOSE_AT = 40;
 let voiceSpread = -1;
+let voiceSubsTl!: gsap.core.Timeline;
+let hasVoiceSubs = false;
 let voiceChainActive = false;
 let voiceWaiter = () => {};
 
@@ -448,9 +465,14 @@ function finishVoiceChain() {
 }
 
 function stopSpreadVoices() {
+    if (hasVoiceSubs) {
+        voiceSubsTl.kill();
+        hasVoiceSubs = false;
+    }
     voiceWaiter = () => {};
     allSpreadVoices.forEach((a) => {
         a.onended = null;
+        a.ontimeupdate = null;
         a.pause();
         a.currentTime = 0;
     });
@@ -472,7 +494,34 @@ function playSpreadVoices(n: number) {
             clip.onended = () => next.play().catch(finishVoiceChain);
         }
     });
+    const sections = voiceLines[n];
+    if (sections !== undefined) {
+        const subsTl = gsap.timeline();
+        voiceSubsTl = subsTl;
+        hasVoiceSubs = true;
+        let offset = 0;
+        clips.forEach((clip, i) => {
+            const lines = sections[i];
+            if (lines === undefined) return;
+            const length = clipLength(clip, lines);
+            voiceSubs(subsTl, lines, length, offset);
+            offset += length;
+        });
+        subsTl.set(spreadSubs, {
+            autoAlpha: 0
+        }, offset);
+    }
     clips[0]!.play().catch(finishVoiceChain);
+    
+    if (n === 9) {
+        const last = clips[clips.length - 1]!;
+        last.ontimeupdate = () => {
+            if (last.currentTime >= BOOK_CLOSE_AT) {
+                last.ontimeupdate = null;
+                closebook();
+            }
+        };
+    }
 }
 
 const dayOneVoice = new Audio(day1);
@@ -553,7 +602,7 @@ function syncVoice() {
         dayOneVoice.currentTime = 0;
     }
 
-    if (current !== voiceSpread) {
+    if (current !== voiceSpread && bookclosed === false) {
         stopSpreadVoices();
         voiceSpread = current;
         if (current !== 7) playSpreadVoices(current);
@@ -647,7 +696,10 @@ function playSpreadFour() {
     const k = length / 44;
 
     const subsTl = gsap.timeline();
-    addSubtitles(subsTl, fourLines, 44, k);
+    voiceSubs(subsTl, fourLines, length);
+    subsTl.set(spreadSubs, {
+    autoAlpha: 0
+    }, length);
 
     const crew = document.querySelector(".friends-group-one img") as HTMLImageElement;
     const all = document.querySelector(".friends-group-two img") as HTMLImageElement;
@@ -664,52 +716,52 @@ function playSpreadFour() {
     });
 
     spreadFourTl
-        .to(spread, { 
-            scale: 1.8, 
-            x: 370, 
-            y: 100, 
-            duration: 2 * k 
-        })
-        .to(spread, { 
-            y: 40, 
-            duration: 3 * k 
-        })
-        .call(popPhoto, [crew, 5 * k])
-        .to(spread, { 
-            y: -40, 
-            duration: 3 * k 
-        }, "+=" + 5 * k)
-        .call(popPhoto, [all, 6 * k])
-        .to(spread, { 
-            y: -100, 
-            duration: 3 * k 
-        }, "+=" + 6 * k)
-        .to(spread, { 
-            x: -270, 
-            y: 100, 
-            duration: 3 * k 
-        })
-        .to(spread, { 
-            y: 50, 
-            duration: 3 * k 
-        })
-        .call(popPhoto, [me, 3 * k])
-        .to(spread, { 
-            y: 0, 
-            duration: 2 * k 
-        }, "+=" + 3 * k)
-        .call(popPhoto, [sandwich, 4 * k])
-        .to(spread, { 
-            y: -50, 
-            duration: 2 * k 
-        }, "+=" + 4 * k)
-        .call(popPhoto, [lego, 3 * k])
-        .to(spread, { 
-            scale: 1, 
-            x: 0, 
-            y: 0, 
-            duration: 2 * k 
-        }, "+=" + 3 * k);
+    .to(spread, {
+        scale: 1.8,
+        x: 370,
+        y: 100,
+        duration: 2 * k
+    })
+    .to(spread, {
+        y: 40,
+        duration: 3 * k
+    })
+    .call(popPhoto, [crew, 5 * k])
+    .to(spread, {
+        y: -40,
+        duration: 3 * k
+    }, "+=" + 5 * k)
+    .call(popPhoto, [all, 6 * k])
+    .to(spread, {
+        y: -100,
+        duration: 3 * k
+    }, "+=" + 6 * k)
+    .to(spread, {
+        x: -270,
+        y: 100,
+        duration: 3 * k
+    })
+    .to(spread, {
+        y: 50,
+        duration: 3 * k
+    })
+    .call(popPhoto, [me, 3 * k])
+    .to(spread, {
+        y: 0,
+        duration: 2 * k
+    }, "+=" + 3 * k)
+    .call(popPhoto, [sandwich, 4 * k])
+    .to(spread, {
+        y: -50,
+        duration: 2 * k
+    }, "+=" + 4 * k)
+    .call(popPhoto, [lego, 3 * k])
+    .to(spread, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        duration: 2 * k
+    }, "+=" + 3 * k);
 }
 
 function preloadNextVideos() {
@@ -724,32 +776,41 @@ function preloadNextVideos() {
 const spreadSubs = document.querySelector<HTMLElement>(".spread-subs")!;
 const TYPE_SPEED = 35;
 
-function addSubtitles(tl: gsap.core.Timeline, lines: string[], end: number, k = 1) {
-    lines.forEach((line, i) => {
-        const start = Number(line.slice(0, line.indexOf(":"))) * k;
-        const text = line.slice(line.indexOf(":") + 1).trim();
+function clipLength(clip: HTMLAudioElement, lines: string[]) {
+    if (Number.isFinite(clip.duration)) return clip.duration;
+    let chars = 0;
+    lines.forEach((line) => {
+        chars += line.length;
+    });
+    return chars / 15;
+}
 
-        let stop = end * k;
-        const next = lines[i + 1];
-        if (next !== undefined) {
-            stop = Number(next.slice(0, next.indexOf(":"))) * k;
-        }
-        const typing = Math.max(Math.min(text.length / TYPE_SPEED, stop - start - 0.3), 0.2);
+function voiceSubs(tl: gsap.core.Timeline, lines: string[], duration: number, offset = 0) {
+    let total = 0;
+    lines.forEach((line) => {
+        total += line.length;
+    });
+
+    let start = offset;
+    lines.forEach((line) => {
+        const share = (line.length / total) * duration;
+        const typing = Math.max(share * 0.85, 0.2);
         const chars = { count: 0 };
 
-        tl.set(spreadSubs, { autoAlpha: 1 }, start);
+        tl.set(spreadSubs, {
+            autoAlpha: 1
+        }, start);
         tl.to(chars, {
-            count: text.length,
+            count: line.length,
             duration: typing,
             ease: "none",
             onUpdate: () => {
-                spreadSubs.textContent = text.slice(0, Math.round(chars.count));
+                spreadSubs.textContent = line.slice(0, Math.round(chars.count));
             }
         }, start);
-        tl.set(spreadSubs, { autoAlpha: 0 }, stop);
+        start += share;
     });
 }
-
 import nightText from "./subs.txt?raw";
 const nightImages = gsap.utils.toArray<HTMLImageElement>(".night-frame img");
 const nightCaption = document.querySelector<HTMLElement>(".night-photo figcaption")!;
@@ -761,8 +822,22 @@ const allLines = nightText
     .filter((line) => line !== "");
 
 const dividerAt = allLines.indexOf("---");
+const eightAt = allLines.indexOf("===");
+const nineAt = allLines.indexOf("+++");
+const nineLastAt = allLines.indexOf("***");
+
 const nightLines = allLines.slice(0, dividerAt);
-const fourLines = allLines.slice(dividerAt + 1);
+const fourLines = allLines
+    .slice(dividerAt + 1, eightAt)
+    .map((line) => line.replace(/^[\d.]+:\s*/, ""));
+const eightLines = allLines.slice(eightAt + 1, nineAt);
+const nineLines = allLines.slice(nineAt + 1, nineLastAt);
+const nineLastLines = allLines.slice(nineLastAt + 1);
+
+const voiceLines: Record<number, string[][]> = {
+    8: [eightLines],
+    9: [nineLines, nineLastLines],
+};
 const nightCaptions: string[] = [];
 const nightSubtitles: string[] = [];
 
@@ -962,7 +1037,7 @@ function playNightSlideshow() {
         onStart: lift,
         onComplete: drop
     });
-    
+
     let venueDur = 12;
     if (Number.isFinite(toVenueVoice.duration)) venueDur = toVenueVoice.duration;
     tl.to({}, { duration: Math.max(venueDur - 6.5 - 0.5, 0.3) });
@@ -1652,6 +1727,116 @@ function playSpreadEight() {
     }
 }
 
+const lastStamp = document.querySelector<HTMLElement>(".home-stamp")!;
+const tkMain = document.querySelector<HTMLElement>(".home-ticket .ticket-main")!;
+const tkStub = document.querySelector<HTMLElement>(".home-ticket .ticket-stub")!;
+let spreadNineTl!: gsap.core.Timeline;
+let hasSpreadNine = false;
+const lastz = 1.6;
+const look9 = 100;
+
+function playSpreadNine() {
+    locked = true;
+
+    gsap.set(spread, { 
+        transformOrigin: "50% 50%" 
+    });
+    gsap.set(lastStamp, { 
+        autoAlpha: 0, 
+        scale: 1 
+    });
+    gsap.set([tkMain, tkStub], { 
+        x: 0, 
+        y: 0, 
+        rotation: 0 
+    });
+
+    const tl = gsap.timeline({
+        onComplete: () => {
+            locked = false;
+            scheduleNextPage();
+        }
+    });
+    spreadNineTl = tl;
+    hasSpreadNine = true;
+
+    let clipOne = 20.5;
+    const firstDur = spreadVoices[9]![0]!.duration;
+    if (Number.isFinite(firstDur)) clipOne = firstDur;
+
+    const go = (vars: gsap.TweenVars, position: number) => {
+        tl.to(spread, {
+            ease: "power2.inOut",
+            onStart: lift,
+            onComplete: drop,
+            ...vars
+        }, position);
+    };
+
+    go({ 
+        scale: lastz, 
+        x: HALF * lastz, 
+        y: look9, 
+        duration: 2 
+    }, 0.3);
+    go({ 
+        y: -look9, 
+        duration: 10, 
+        ease: "sine.inOut" 
+    }, 3);
+    go({ 
+        x: -HALF * lastz, 
+        y: look9, 
+        duration: 2 
+    }, 14);
+    const cutAt = clipOne + 27;
+    go({ 
+        y: -look9, 
+        duration: cutAt - 17.5, 
+        ease: "sine.inOut" 
+    }, 17);
+
+    tl.to(tkStub, {
+        rotation: 2,
+        x: 2,
+        duration: 0.07,
+        repeat: 5,
+        yoyo: true,
+        ease: "none"
+    }, cutAt);
+    tl.to(tkStub, {
+        x: 12,
+        y: 30,
+        rotation: 10,
+        duration: 0.8,
+        ease: "power2.in"
+    }, cutAt + 0.5);
+    tl.to(tkMain, {
+        x: -5,
+        rotation: -1.5,
+        duration: 0.4,
+        ease: "power2.out"
+    }, cutAt + 0.5);
+    tl.fromTo(lastStamp, {
+        scale: 2.5,
+        autoAlpha: 0
+    }, {
+        scale: 1,
+        autoAlpha: 1,
+        duration: 0.35,
+        ease: "power4.in"
+    }, clipOne + 33.6);
+    go({ 
+        scale: 1, 
+        x: 0, 
+        y: 0, 
+        duration: 2.5 
+    }, clipOne + 34.5);
+    tl.to({}, { 
+        duration: 0.1 
+    }, clipOne + 38);
+}
+
 if (location.hash === "#dev") {
     typingIntro.kill();
     introScreen.remove();
@@ -1660,12 +1845,12 @@ if (location.hash === "#dev") {
 
     leaves[1]!.classList.add("flipped");
     leaves[2]!.classList.add("flipped");
-    // leaves[3]!.classList.add("flipped");
-    // leaves[4]!.classList.add("flipped");
-    // leaves[5]!.classList.add("flipped");
-    // leaves[6]!.classList.add("flipped");
-    // leaves[7]!.classList.add("flipped");
-    // leaves[8]!.classList.add("flipped");
-    current = 3;
+    leaves[3]!.classList.add("flipped");
+    leaves[4]!.classList.add("flipped");
+    leaves[5]!.classList.add("flipped");
+    leaves[6]!.classList.add("flipped");
+    leaves[7]!.classList.add("flipped");
+    leaves[8]!.classList.add("flipped");
+    current = 9;
     updatePage();
 }

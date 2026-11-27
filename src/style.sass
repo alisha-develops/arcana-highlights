@@ -23,6 +23,7 @@ body
   font-family: sans-serif
   margin: 0
   min-height: 100vh
+  min-height: 100dvh
   display: flex
   flex-direction: column
   align-items: center
@@ -1109,26 +1110,31 @@ body
 
 .spread-subs
   position: fixed
-  top: 50%
-  left: 20px
-  translate: 0 -50%
-  z-index: 999
+  top: auto
+  right: auto
+  left: 0
+  translate: none
+  width: 100%
+  background: linear-gradient(to top, rgba(20, 12, 4, 0.92) 45%, rgba(20, 12, 4, 0))
+  bottom: 0
+  height: auto
   box-sizing: border-box
-  width: clamp(200px, 24vw, 320px)
-  min-height: 70px
   margin: 0
-  padding: 14px 18px
-  background: rgba(20, 12, 4, 0.7)
-  border: 1px solid rgba(243, 230, 192, 0.25)
+  padding: 80px max(24px, 8vw) 46px
+  border: 0
+  box-shadow: none
   color: #f3e6c0
   font-family: "datbox"
-  font-size: clamp(0.85rem, 1.1vw, 1rem)
+  font-size: 1.4rem
   line-height: 1.5
-  letter-spacing: 0.03em
-  text-align: left
-  opacity: 0
-  visibility: hidden
-  animation: subs-side-pan 44s ease-in-out both
+  letter-spacing: 0.05em
+  text-align: center
+  text-shadow: 2px 2px 0 #2b1d0e, -1px -1px 0 #2b1d0e, 1px -1px 0 #2b1d0e, -1px 1px 0 #2b1d0e
+  z-index: 55
+  pointer-events: none
+  &:empty
+    display: none
+  
 
 .half
   position: absolute
@@ -1914,6 +1920,34 @@ body
       line-height: 1.6
     button
       top: calc(50% + 120px)
+  .spread-subs
+    font-size: 1.15rem
+    padding: 60px 20px 44px
+  .pp-cap
+    font-size: 0.85rem
+    padding: 6px 10px 8px
+  .footer
+    font-size: 11px
+    padding: 6px
+
+@media (max-width: 768px)
+  .intro
+    padding: 30px 8%
+    p
+      width: 85%
+      font-size: 1.1rem
+      line-height: 1.6
+    button
+      top: calc(50% + 120px)
+  .spread-subs
+    font-size: 1.15rem
+    padding: 60px 20px 44px
+  .pp-cap
+    font-size: 0.85rem
+    padding: 6px 10px 8px
+  .footer
+    font-size: 11px
+    padding: 6px
 
 @media (max-width: 480px)
   .intro
@@ -1924,3 +1958,25 @@ body
       line-height: 1.5
     button
       top: calc(50% + 130px)
+  .spread-subs
+    font-size: 0.95rem
+    line-height: 1.4
+    letter-spacing: 0.03em
+    padding: 50px 14px 38px
+  .pp-cap
+    font-size: 0.75rem
+  .guestbook
+    width: 92vw
+    max-width: 320px
+  .page-indicator
+    font-size: 0.65rem
+
+@media (max-height: 520px)
+  .spread-subs
+    font-size: 1rem
+    padding: 36px max(16px, 6vw) 34px
+  .guestbook
+    scale: 0.8
+  .footer
+    font-size: 10px
+    padding: 4px
